@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>this is the edit page</title>
+  <script type="text/javascript">
+  var addTechnique=function(){
+    var list=document.getElementById("technique_list");
+    var rows=list.getElementsByTagName("li");
+    var row=document.createElement('li');
+    var len=rows.length
+    var input = document.createElement("input");
+    var input2=document.createElement("textarea");
+    var linebreak=document.createElement("br");
+    var check=document.createElement("input");
+    check.setAttribute("name","is_correct["+len+"]")
+    check.setAttribute("type","checkbox");
+    check.setAttribute("class","check1")
+    input.setAttribute("type", "text");
+    input.setAttribute("name", "technique["+len+"]");
+    input.setAttribute("size","50");
+    input.setAttribute("required","true");
+    input2.setAttribute("style","overflow:auto");
+    input2.setAttribute("rows","5");
+    input2.setAttribute("cols","50");
+    input2.setAttribute("name","technique_conversation["+len+"]");
+    input2.setAttribute("required","true");
+    row.appendChild(check);
+    row.appendChild(input);
+    row.appendChild(linebreak);
+    row.appendChild(input2);
+    list.appendChild(row);
+    //alert(len+"row added");
+  }
+  var deleteTechnique=function()
+  {
+    var list=document.getElementById("technique_list");
+    var rows=list.getElementsByTagName("li");
+    var len=rows.length
+    if(len > 0)
+        rows[len-1].parentNode.removeChild(rows[len-1]);
+  }
+  var row_validation=function()
+    {
+      
+      var list=document.getElementById("technique_list");
+      var rows = list.getElementsByTagName("li");
+      var len=rows.length
+      if(len <= 0) 
+      {
+        alert("enter atleast 1 row ")
+        return false;
+      }
+    
+    }
+      
+  </script>
+
+</head>
+<body>
+<p>Last conversation ID : {{last_conversation}}</p>
+  <form action="done/" method="post" onsubmit="return row_validation()" id="exerciseform">{% csrf_token %}
+    <textarea style="overflow:auto" rows="10" cols="50" name="base_conversation" required></textarea>
+    <br>
+    <label>Module Number: <input type="text" name="module_number" onkeypress='return event.charCode >= 48 && event.charCode <= 57' required></input></label>
+    <ol id="technique_list">
+      
+    </ol>
+    <button type="button" onclick="addTechnique()">add technique</button>
+    <button type="button" onclick="deleteTechnique()">delete technique</button>
+  
+    <input type="submit" value="Submit" >
+  </form>
+
+</body>
+</html>

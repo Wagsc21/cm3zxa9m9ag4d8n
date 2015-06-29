@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<div>
+    		<center><h1>Users family details form</a></h1></center>
+	</div>
+</head>
+<body>
+
+	
+	
+<body bgcolor="RED" >
+<table>
+
+<form action='/fill/family_details/' method='post'>{% csrf_token %}
+
+<br><br>
+{{form.as_p}}
+<p>&nbsp;</p>
+
+<input type='submit' value='Submit' />
+<br><br>
+<button><a href="/depression_quiz/">skip</a></button>
+</form>
+</table>
+</body>
+</html>

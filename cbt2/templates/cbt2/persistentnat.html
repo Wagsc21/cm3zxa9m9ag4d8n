@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<div>
+    		<h1><a href="/">Persistent NAT list</a></h1>
+	</div>
+</head>
+<body>
+
+	
+	
+<form action='/persistentnat/submit/{{num}}/' method='post'> {% csrf_token %}
+<ol>
+{% for persistentnats in persistentnats_list %}
+    
+		<input type='checkbox' name='optionID{{persistentnats.persistentnatID}}' value='{{persistentnats.persistentnatID}}'>{{persistentnats.persistentnat_text}}<br>
+
+{% endfor %}
+
+</ol>
+<input type = 'submit' value='Submit'>
+</form>
+</body>
+</html>

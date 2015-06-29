@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<div>
+    		<h1><a href="/downloads">Users details form</a></h1>
+	</div>
+</head>
+
+<body bgcolor="RED">
+<form action='/fill/details/' method='post'>{% csrf_token %}
+<table>
+{{form}}
+</table>
+<input type='submit' value='Submit' />
+</form>
+</body>
+</html>

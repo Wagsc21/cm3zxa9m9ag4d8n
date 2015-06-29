@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<div>
+    		<h1><a href="/users">signup</a></h1>
+	</div>
+</head>
+<body>
+	
+	
+<body bgcolor="RED">
+<form action='/signup/' method='post'>{% csrf_token %}
+
+{{ form.as_p }}
+<input type='submit' value='Submit' />
+</form>
+</body>
+</html>

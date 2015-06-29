@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<div>
+    		<h1><a href="/">Event list</a></h1>
+	</div>
+</head>
+<body>
+	
+	
+<form action='/event/submit/{{num}}/' method='post'> {% csrf_token %}
+<ol>
+{% for events in events_list %}
+    
+		<input type='checkbox' name='optionID{{events.eventID}}' value='{{eventss.eventID}}'>{{events.event_text}}<br>
+
+{% endfor %}
+
+</ol>
+<input type = 'submit' value='Submit'>
+</form>
+</body>
+</html>

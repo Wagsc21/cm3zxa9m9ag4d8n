@@ -1,0 +1,15 @@
+<DOCTYPE!>
+<hmtl>
+	<head>
+		<title>this is a demo conversation</title>
+	</head>
+	<body>
+		<form action="conversation/" method="post"> {% csrf_token %}
+		<input type="hidden" name="conversationid" value="{{conversation.conversationID}}">
+			<strong>{{conversation.conversation_text| linebreaks }}</strong>
+			<strong>{{next_conversation.conversation_text| linebreaks }}</strong>
+			<pre><i><strong>{{message}}</strong></i></pre>
+			<input type=button value="try again" onClick="javascript:history.go(-1);">
+		</form>
+	</body>
+</hmtl>

@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<div>
+    		<h1>Users details form</a></h1>
+	</div>
+</head>
+<body>
+	
+	
+<body bgcolor="RED">
+<table>
+<form action='/user/setting/' method='post'>{% csrf_token %}
+{{ form.as_p }}
+<input type='submit' value='Submit' />
+</form>
+</table>
+</body>
+</html>

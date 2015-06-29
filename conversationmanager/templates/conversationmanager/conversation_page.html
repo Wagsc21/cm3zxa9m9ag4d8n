@@ -1,0 +1,13 @@
+<doctype!>
+<html>
+	<head>
+		<title> this is conversation page</title>
+	</head>
+	<body>
+		<form action="/conversation/" method="post">{% csrf_token %}
+		{%  for conversation in conversations  %}
+		<input type="submit" name="conversation" value="{{conversation}}">
+		{% endfor %}
+		</form>
+	</body>
+</html>

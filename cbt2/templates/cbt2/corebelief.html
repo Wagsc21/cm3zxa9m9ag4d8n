@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<div>
+    		<h1><a href="/users">corebeliefs list</a></h1>
+	</div>
+</head>
+<body>
+
+	
+	
+<form action='/corebelief/submit/{{num}}/' method='post'> {% csrf_token %}
+<ol>
+{% for corebeliefs in corebeliefs_list %}
+    
+		<input type='checkbox' name='optionID{{corebeliefs.corebeliefID}}' value='{{corebeliefs.corebeliefID}}'>{{corebeliefs.corebelief_text}}<br>
+
+{% endfor %}
+</ol>
+<input type = 'submit' value='Submit'>
+</form>
+</body>
+</html>

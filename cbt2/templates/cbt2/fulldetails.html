@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<div>
+    		<h1><a href="/users">Users Details</a></h1>
+	</div>
+</head>
+<body>
+	
+	
+
+{% for user in users %}
+    <div>
+	<p> {{ user.username}} </p>
+        <p>registered: {{ user.registration_date }}</p>
+        <p> password: {{user.password}}</p>
+	<p> registration time:{{user.registration_time}}</p>
+        <p>{{ user.emailId }}</p>
+    </div>
+{% endfor %}
+
+</body>
+</html>

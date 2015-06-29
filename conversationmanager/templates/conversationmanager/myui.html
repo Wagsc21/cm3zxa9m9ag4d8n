@@ -1,0 +1,82 @@
+{% load staticfiles %}
+<html>
+<head>
+  <script type="text/javascript" >
+   var removerows = function  (tablebody) {
+      var rows = tablebody.getElementsByTagName("tr");
+      var len=rows.length
+      if(len > 0)
+        rows[len-1].parentNode.removeChild(rows[len-1]);
+    }
+
+    var addrows = function  (tablebody) {
+     
+        var rows = tablebody.getElementsByTagName("tr");
+        var len=rows.length
+        var row = document.createElement("tr");
+        var titlecell = document.createElement("td");
+        titlecell.appendChild(document.createTextNode("Row " + len));
+        row.appendChild(titlecell);
+        for (var j=0;j<3;j++)
+        {
+          var cell = document.createElement("td");
+          var input = document.createElement("input");
+          input.setAttribute("type", "text");
+          input.setAttribute("name", "row["+len+"]["+j+"]");
+          input.setAttribute("required","true");
+          input.setAttribute("size","50");
+          cell.appendChild(input);
+          row.appendChild(cell);
+        }
+        tablebody.appendChild(row);
+    }
+
+    var adder = function  () {
+      var tablebody = document.getElementById("maintablebody");
+      console.log("head");
+      addrows(tablebody);
+    }
+    var remover=function () {
+      var tablebody=document.getElementById("maintablebody")
+      removerows(tablebody)
+      // body...
+    }
+    var row_validation=function()
+    {
+
+      var tablebody = document.getElementById("maintablebody");
+       var rows = tablebody.getElementsByTagName("tr");
+      var len=rows.length
+      if(len <= 0) 
+      {
+        alert("enter atleast 1 row ")
+        return false;
+      }
+      
+    }
+    
+  </script>
+</head>
+<body>
+  <p>Last conversation ID:{{lastconversation}}</p>
+  <form action="/conversations/" method="post" onsubmit="return row_validation()">{% csrf_token %}
+    <div>
+    
+          <label>conversationID &nbsp; <input  type="text" name="conversationid" required></label>
+          
+          <table id="maintable" >
+                  <th>&nbsp;</th>
+                  <th>current dialog</th>
+                  <th>option</th>
+                  <th>next dialog</th>
+                    <tbody id="maintablebody">
+              
+                     </tbody>
+          </table>
+          <button type="button" name="addbutton" onclick='adder()' >add another row</button>
+          <button type="button" name="removebutton" onclick='remover()'>delete last row</button> 
+    <div>
+    <input type="submit" value="Submit" >
+  </form>
+</body>
+</html>

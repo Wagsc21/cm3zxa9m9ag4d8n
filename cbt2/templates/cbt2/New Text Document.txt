@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<div>
+    		<h1><a href="/">Intermediate beliefs list</a></h1>
+	</div>
+</head>
+<body>
+	
+	
+<form action='/Intermediatebelief/submit/' method='post'> {% csrf_token %}
+<ol>
+{% for intermediatebeliefs in intermediatebeliefs_list %}
+    
+		<input type='checkbox' name='intermediatebelief{{intermediatebeliefs.intermediatebeliefID}}' value='{{intermediatebeliefs.intermediatebeliefID}}'>{{intermediatebeliefs.intermediatebelief_text}}<br>
+
+{% endfor %}
+
+</ol>
+<input type = 'submit' value='Submit'>
+</form>
+</body>
+</html>

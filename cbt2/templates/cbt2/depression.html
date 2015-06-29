@@ -1,0 +1,56 @@
+<!DOCTYPE>
+<html>
+<head>
+		<p><a href="https://www.google.co.in/?gfe_rd=cr&ei=dDh-VfTgIrLG8Afm2YCoBA&gws_rd=ssl">depression quiz</a></p>
+</head>
+<body>
+{% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
+<form action='/result/9' method="post">{% csrf_token %}
+<table border="1|0" padding ="10">
+
+<thead>
+   <tr>
+      <th>&nbsp;</th>
+      
+            
+      <th>Not at all </th><th>&nbsp;</th>
+            
+      <th>On some days </th><th>&nbsp;</th>
+
+	<th>Most of the days</th><th>&nbsp;</th>
+
+	<th>Nearly every day</th>
+         </tr>
+</thead>
+
+<tbody>
+          
+
+          
+		        {% for questions in quiz_list %}
+                        <tr>
+            <td>{{questions}}</td>
+      
+            <td >
+                   <label > <input type="radio" name="depression_question_0{{forloop.counter}}" value="0" /><th>&nbsp;</th>
+      </td>
+	<td >
+                   <label > <input type="radio" name="depression_question_0{{forloop.counter}}" value="1" /><th>&nbsp;</th>
+      </td>
+	<td >
+                   <label > <input type="radio" name="depression_question_0{{forloop.counter}}" value="2" /><th>&nbsp;</th>
+      </td>
+            <td >
+                   <label > <input type="radio" name= "depression_question_0{{forloop.counter}}"  value="3" /> <th>&nbsp;</th>
+         </label>
+      </td>
+            </tr>
+            {% endfor %}
+   </tbody>
+
+</table>
+<input  type='submit' value="Submit" />
+</form>
+
+</body>
+</html>

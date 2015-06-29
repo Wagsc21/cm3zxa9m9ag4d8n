@@ -1,0 +1,18 @@
+<DOCTYPE!>
+<hmtl>
+	<head>
+		<title>this is a demo conversation</title>
+	</head>
+	<body>
+		<form action="/exercise/conversation/" method="post"> {% csrf_token %}
+		<input type="hidden" name="conversationid" value="{{conversation.conversationID}}">
+			<strong>{{conversation.conversation_text| linebreaks }}</strong>
+			<strong><pre><h3>Here you need to help the patient identify their NAT. Which technique can you use?</h3>
+			</pre></strong>
+			<p>{{message}}</p>
+		<label><strong>Technique:-</strong> <input type="text" name="technique" required></label>
+		<input type="submit" value="Submit">
+
+		</form>
+	</body>
+</hmtl>
