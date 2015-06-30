@@ -5,8 +5,10 @@
 	</head>
 	<body>
 		<form action="/conversation/" method="post">{% csrf_token %}
+		<p>Hi! {{user}}</p>
 		{%  for conversation in conversations  %}
-		<input type="submit" name="conversation" value="{{conversation}}">
+		<input type="submit" name="conversation" value="{{conversation.conversationID}}">
+		
 		{% endfor %}
 		</form>
 	</body>

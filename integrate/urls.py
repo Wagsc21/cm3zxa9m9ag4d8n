@@ -18,8 +18,10 @@ from django.contrib import admin
 from django.views.generic import TemplateView
 
 urlpatterns = [
+
     url(r'^admin/', include(admin.site.urls)),
     url(r'^home/','cbt2.views.home'),
+    url(r'^welcome/','cbt2.views.welcome'),
     url(r'^fill/details/$','cbt2.views.user_details'),
     url(r'^fill/family_details/$','cbt2.views.family_details'),
     url(r'^signup/$','cbt2.views.usersignup'),
@@ -52,5 +54,8 @@ urlpatterns = [
     url(r'exercise/$','exercise.views.show_exercise'),
     url(r'exercise/conversation/$','exercise.views.conversation'),
     url(r'add/exercises/$','exercise.views.exercise'),
-    url(r'add/exercises/done/$','exercise.views.add_exercise')
+    url(r'add/exercises/done/$','exercise.views.add_exercise'),
+    url(r'^module/$','defaultapp.views.modulemanager'),
+    url(r'^technique/$','defaultapp.views.moduletechnique')
+
 ]

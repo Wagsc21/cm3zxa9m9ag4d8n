@@ -60,11 +60,11 @@
                     {% for row in rows %}
                     	<tr>
                     		<td>Row{{forloop.counter}}</td>
-                    		<td><input type="text" name="row[{{forloop.counter}}][0]") value="{{row.current_conversation.dialog_text}}" size="50">
+                    		<td><input type="text" name="row[{{forloop.counter}}][0]") value="{{row.current_dialog.dialog_text}}" size="50">
                     		</td>
                     		<td><input type="text" name="row[{{forloop.counter}}][1]") value="{{row.option.option_text}}" size="50">
                     		</td>
-                    		<td><input type="text" name="row[{{forloop.counter}}][2]") value="{{row.next_conversation.dialog_text}}" size="50">
+                    		<td><input type="text" name="row[{{forloop.counter}}][2]") value="{{row.next_dialog.dialog_text}}" size="50">
                     		</td>
                     	</tr>
               		{% endfor %}

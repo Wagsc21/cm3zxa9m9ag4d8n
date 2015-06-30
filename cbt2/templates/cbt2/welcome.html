@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>this is user welcome page</title>
+</head>
+<body>
+<form action="/module/" method="post">{% csrf_token %}
+<button name="module_number" value="1">Psychoeducation about Depression and CBT</button> <br>
+<button name="module_number" value="2"> Behavioral Activation </button> <br>
+<button name="module_number" value="3"> Identifying NATs </button> <br>
+<button name="module_number" value="4"> Challenging NATs </button> <br>
+<button name="module_number" value="5"> Modifying Intermediate and  Core Beliefs </button> <br>
+<button name="module_number" value="6"> Relapse Prevention </button>
+<br>
+<br>
+<button><a href="/accounts/logout/">LOG OUT</a></button>
+</form>
+
+<!-- <button><p><a href="/accounts/logout/">LOG OUT</a></p></button> -->
+</body>
+</html>

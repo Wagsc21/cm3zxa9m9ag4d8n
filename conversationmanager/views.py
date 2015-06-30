@@ -16,40 +16,36 @@ from django.contrib.auth.decorators import user_passes_test
 from django.db.models import Q , Max
 # Create your views here.
 #"""
- 
+
  # function for carrying out the conversation with conversation id as only input
 def carry_out_conversation(request):
-    """
-    try:
-        username=request.session['username']
-        user=User.objects.get(username=username)
-    except:
-        return HttpResponseRedirect('/accounts/login/')
-    """
+    
     username=request.session['username']
     user=User.objects.get(username=username)    
     if not request.POST.get('dialog',None) == None:
         
         if not request.POST.get('option',None) == None:
             try :
-                dialog=models.Conversations.objects.get(dialog=int(request.POST['dialog']))
+                dialog=models.Dialogs.objects.get(dialog=int(request.POST['dialog']))
                 #return HttpResponse(request.POST['dialog'])
+                conversationID=models.Conversation.objects.get(conversationID=int(request.session['conversationID']))
                 option=models.Options.objects.get(optionID= int(request.POST['option']))
-                qset=models.Conversationoption.objects.filter(current_conversation = dialog, option =option)
-                optionset=models.Conversationoption.objects.filter(current_conversation=qset[0].next_conversation)
-                dialog=qset[0].next_conversation
+                qset=models.Conversationoptiongraph.objects.filter(current_dialog = dialog, option =option)
+                optionset=models.Conversationoptiongraph.objects.filter(current_dialog=qset[0].next_dialog)
+                dialog=qset[0].next_dialog
                 option_list=[]
                 for opt in optionset:
                     option_list.append(opt.option)
-                models.Userconversation.objects.create(user=user,conversation=qset[0].current_conversation,option_selected=qset[0].option,conversation_time=datetime.now(),conversationID=request.session['conversationID'])
+                models.Userconversation.objects.create(user=user,dialog=qset[0].current_dialog,option_selected=qset[0].option,conversation_time=datetime.now(),conversationID=conversationID)
                 return render(request,'conversationmanager/conversation.html',{'option_list': option_list,'dialog':dialog})
             except(KeyError):
                 return HttpResponse('keyerror in carrying it out')
     
     else:
         try:
-            fullconversationset=models.Conversations.objects.filter(conversationID=request.POST['conversation']).order_by('dialog')
-            optionset=models.Conversationoption.objects.filter(current_conversation= fullconversationset[0])
+            conversationID=models.Conversation.objects.get(conversationID=request.POST['conversation'])
+            fullconversationset=models.Dialogs.objects.filter(conversationID=conversationID).order_by('dialog')
+            optionset=models.Conversationoptiongraph.objects.filter(current_dialog = fullconversationset[0])
             request.session['conversationID']=request.POST['conversation']
             option_list=[]
             for opt in optionset:
@@ -57,52 +53,50 @@ def carry_out_conversation(request):
             #models.Userconversation.objects.create(user=user,conversation=fullconversationset[0],option_selected=qset[0].option,conversation_time=datetime.now())
             return render(request,'conversationmanager/conversation.html',{'option_list': option_list,'dialog':fullconversationset[0]})
         except(KeyError):
-            return HttpResponse('keyerror in start')
-#"""   
+            return HttpResponseRedirect('/conversation_page/')
+
     
 def conversation_page(request):
-    conversations=models.Conversations.objects.values_list("conversationID",flat=True).distinct()
-    conversations=list(set(conversations))
+    conversations=models.Conversation.objects.all()
     return render(request,'conversationmanager/conversation_page.html',{'conversations': conversations})
 
 
 @user_passes_test(lambda u: u.is_superuser)
 #----------------------------------------------------------------------
 def conversation(request):
-    last_conversation=models.Conversations.objects.all().aggregate(Max('conversationID'))['conversationID__max']
+    last_conversation=models.Conversation.objects.all().aggregate(Max('conversationID'))['conversationID__max']
     return render(request,"conversationmanager/myui.html",{'lastconversation': last_conversation})
 
 @user_passes_test(lambda u: u.is_superuser)
 #----------------------------------------------------------------------
 def add_conversation(request):
-    conversation=models.Conversations.objects.filter(Q(conversationID=int(request.POST.get('conversationid'))))
-    conversation=list(conversation)
-    if not len(conversation) == 0:
+    conversation=models.Conversation.objects.filter(conversationID=int(request.POST.get('conversationid')))
+    if conversation.exists():
         return render(request,"conversationmanager/goback.html",{'message':'%s already exist' % request.POST.get('conversationid')})    
-    
+    conversationID=models.Conversation.objects.create(conversationID=int(request.POST.get('conversationid')))
     i=0
     while (not request.POST.get('row[%d][0]' %i, None) == None):
-        last_dialog_ID=models.Conversations.objects.all().aggregate(Max('dialog'))['dialog__max']
+        last_dialog_ID=models.Dialogs.objects.all().aggregate(Max('dialog'))['dialog__max']
         last_option_ID=models.Options.objects.all().aggregate(Max('optionID'))['optionID__max']
         #i=i+1
         
             
 
         try:
-            current_dialog=models.Conversations.objects.get(Q(conversationID=int(request.POST.get('conversationid'))),Q(dialog_text=request.POST.get('row[%d][0]' %i)))
+            current_dialog=models.Dialogs.objects.get(Q(conversationID=conversationID),Q(dialog_text=request.POST.get('row[%d][0]' %i)))
         except:
-            current_dialog=models.Conversations.objects.create(dialog=last_dialog_ID+1,conversationID=int(request.POST.get('conversationid')),dialog_text=request.POST.get('row[%d][0]' %i))
-            last_dialog_ID=models.Conversations.objects.latest("dialog").dialog
+            current_dialog=models.Dialogs.objects.create(dialog=last_dialog_ID+1,conversationID=conversationID,dialog_text=request.POST.get('row[%d][0]' %i))
+            last_dialog_ID=models.Dialogs.objects.latest("dialog").dialog
         try:
-            next_dialog=models.Conversations.objects.get(Q(conversationID=int(request.POST.get('conversationid'))),Q(dialog_text=request.POST.get('row[%d][2]' %i)))
+            next_dialog=models.Dialogs.objects.get(Q(conversationID=conversationID),Q(dialog_text=request.POST.get('row[%d][2]' %i)))
         except:
-            next_dialog=models.Conversations.objects.create(conversationID=int(request.POST.get('conversationid')),dialog=last_dialog_ID+1,dialog_text=request.POST.get('row[%d][2]' %i))
-            last_dialog_ID=models.Conversations.objects.latest("dialog").dialog
+            next_dialog=models.Dialogs.objects.create(conversationID=conversationID,dialog=last_dialog_ID+1,dialog_text=request.POST.get('row[%d][2]' %i))
+            last_dialog_ID=models.Dialogs.objects.latest("dialog").dialog
         try:
             option=models.Options.objects.get(Q(option_text=request.POST.get('row[%d][1]' %i)))
         except models.Options.DoesNotExist:
             option=models.Options.objects.create(optionID=last_option_ID+1 ,option_text=request.POST.get('row[%d][1]' %i))
-        models.Conversationoption.objects.get_or_create(current_conversation=current_dialog,option=option,next_conversation=next_dialog)
+        models.Conversationoptiongraph.objects.get_or_create(current_dialog=current_dialog,option=option,next_dialog=next_dialog)
         i=i+1
     return render(request,"conversationmanager/goback.html",{'message':'%s added' % request.POST.get('conversationid')})
 
@@ -118,38 +112,44 @@ def update_conversation(request):
 @user_passes_test(lambda u: u.is_superuser)
 #----------------------------------------------------------------------
 def edit_conversation(request):
-    conversation=models.Conversations.objects.filter(Q(conversationID=int(request.POST.get('conversationid'))))
-    x=list(conversation)
-    if len(x) == 0:
+    conversation=models.Conversation.objects.filter(Q(conversationID=int(request.POST.get('conversationid'))))
+    if not conversation.exists():
         return render(request,"conversationmanager/errorinedit.html",{'message':'%s does not exist' % request.POST.get('conversationid')})
-    rows=models.Conversationoption.objects.filter(current_conversation__in=conversation).order_by("current_conversation")
+    dialogs=models.Dialogs.objects.filter(conversationID__in=conversation)
+    rows=models.Conversationoptiongraph.objects.filter(current_dialog__in=dialogs).order_by("current_dialog")
     return render(request,'conversationmanager/editpage.html',{'rows':rows,'conversationid':request.POST.get('conversationid')})
    
 @user_passes_test(lambda u: u.is_superuser)
 #----------------------------------------------------------------------
 def apply_update(request):
     i=1
-    conversationid=int(request.POST.get('conversationid'))
-    conversations=models.Conversations.objects.filter(conversationID=conversationid).delete()
+    conversationid=models.Conversation.objects.get(conversationID=int(request.POST.get('conversationid')))
+    conversations=models.Dialogs.objects.filter(conversationID=conversationid).delete()
     i=1
     while (not request.POST.get('row[%d][0]' %i, None) == None):
-        last_dialog_ID=models.Conversations.objects.all().aggregate(Max('dialog'))['dialog__max']
+        last_dialog_ID=models.Dialogs.objects.all().aggregate(Max('dialog'))['dialog__max']
+        if last_dialog_ID==None:
+            last_dialog_ID=0
         last_option_ID=models.Options.objects.all().aggregate(Max('optionID'))['optionID__max']
+        if last_option_ID == None:
+            last_option_ID=0
         try:
-            current_dialog=models.Conversations.objects.get(Q(conversationID=int(request.POST.get('conversationid'))),Q(dialog_text=request.POST.get('row[%d][0]' %i)))
+            current_dialog=models.Dialogs.objects.get(Q(conversationID=conversationid),Q(dialog_text=request.POST.get('row[%d][0]' %i)))
         except:
-            current_dialog=models.Conversations.objects.create(dialog=last_dialog_ID+1,conversationID=int(request.POST.get('conversationid')),dialog_text=request.POST.get('row[%d][0]' %i))
-            last_dialog_ID=models.Conversations.objects.latest("dialog").dialog
+            current_dialog=models.Dialogs.objects.create(dialog=last_dialog_ID+1,conversationID=conversationid,dialog_text=request.POST.get('row[%d][0]' %i))
+            last_dialog_ID=models.Dialogs.objects.latest("dialog").dialog
         try:
-            next_dialog=models.Conversations.objects.get(Q(conversationID=int(request.POST.get('conversationid'))),Q(dialog_text=request.POST.get('row[%d][2]' %i)))
+            next_dialog=models.Dialogs.objects.get(Q(conversationID=conversationid),Q(dialog_text=request.POST.get('row[%d][2]' %i)))
         except:
-            next_dialog=models.Conversations.objects.create(conversationID=int(request.POST.get('conversationid')),dialog=last_dialog_ID+1,dialog_text=request.POST.get('row[%d][2]' %i))
-            last_dialog_ID=models.Conversations.objects.latest("dialog").dialog
+            next_dialog=models.Dialogs.objects.create(conversationID=conversationid,dialog=last_dialog_ID+1,dialog_text=request.POST.get('row[%d][2]' %i))
+            last_dialog_ID=models.Dialogs.objects.latest("dialog").dialog
         try:
             option=models.Options.objects.get(Q(option_text=request.POST.get('row[%d][1]' %i)))
         except models.Options.DoesNotExist:
             option=models.Options.objects.create(optionID=last_option_ID+1 ,option_text=request.POST.get('row[%d][1]' %i))
-        models.Conversationoption.objects.get_or_create(current_conversation=current_dialog,option=option,next_conversation=next_dialog)
+        models.Conversationoptiongraph.objects.get_or_create(current_dialog=current_dialog,option=option,next_dialog=next_dialog)
         i=i+1
+    #conversations=models.Dialogs.objects.filter(conversationID=conversationid).delete()
+    
     return edit_conversation(request)
    

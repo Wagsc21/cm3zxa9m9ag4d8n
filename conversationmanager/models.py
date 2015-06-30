@@ -4,6 +4,17 @@ from django.db import models
 from django.contrib import admin
 from django.contrib.auth import settings
 
+class Conversation(models.Model):
+    conversationID=models.IntegerField(primary_key=True)
+        
+        #----------------------------------------------------------------------
+    def __str__(self):
+        return str(self.conversationID)
+    class Meta:
+        ordering=['conversationID']
+        
+
+
 # model for options for a dialog 
 class Options(models.Model):
     optionID=models.IntegerField(primary_key=True)
@@ -14,18 +25,14 @@ class Options(models.Model):
         ordering=['optionID']
 
 
-"""class CustomManagerForConversation(models.Manager):
-    def values_list(self,flat=True):
-        return self.values_list(conversationID)
-    """
     
 # model for conversation
-class Conversations(models.Model):
-    conversationID=models.IntegerField()
+class Dialogs(models.Model):
+    conversationID=models.ForeignKey(Conversation)
     dialog=models.IntegerField('dialog ID',primary_key=True)
     dialog_text=models.TextField()
     user_conversation=models.ManyToManyField(settings.AUTH_USER_MODEL,through='Userconversation')
-    option=models.ManyToManyField(Options,through='Conversationoption',through_fields=('current_conversation','option'))
+    option=models.ManyToManyField(Options,through='Conversationoptiongraph',through_fields=('current_dialog','option'))
     
     objects=models.Manager()
     #customobjects=models.CustomManagerForConversation()
@@ -41,8 +48,8 @@ class Conversations(models.Model):
 # purpose is to store conversation history
 class Userconversation(models.Model):
     user=models.ForeignKey(settings.AUTH_USER_MODEL)
-    conversation=models.ForeignKey(Conversations)
-    conversationID=models.IntegerField()
+    dialog=models.ForeignKey(Dialogs)
+    conversationID=models.ForeignKey(Conversation)
     option_selected=models.ForeignKey(Options)
     conversation_time=models.DateTimeField()
     def __str__(self):
@@ -53,15 +60,16 @@ class Userconversation(models.Model):
 
 
 # intermediate model between Conversations model and Options model
-class Conversationoption(models.Model):
-    current_conversation=models.ForeignKey(Conversations)
+class Conversationoptiongraph(models.Model):
+    current_dialog=models.ForeignKey(Dialogs)
     option=models.ForeignKey(Options)
-    next_conversation=models.ForeignKey(Conversations,related_name='next_conversation',null=True,blank=True)
+    next_dialog=models.ForeignKey(Dialogs,related_name='next_conversation',null=True,blank=True)
     
     def __str__(self):
-        return str(self.current_conversation.dialog)+"-"+str(self. option.optionID)+"-"+str(self.next_conversation.dialog)
+        return str(self.current_dialog.dialog)+"-"+str(self. option.optionID)+"-"+str(self.next_dialog.dialog)
     class meta:
         ordering=['current_conversation']
         
 
 
+        

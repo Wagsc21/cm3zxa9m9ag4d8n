@@ -50,8 +50,10 @@ def random_uid():
 # renders request to home page
 def home(request):
     return render(request,'cbt2/home.html')
-# function for signing up user and creating a database record of user
-
+#----------------------------------------------------------------------
+@login_required(login_url='/accounts/login/')
+def welcome(request):
+    return render(request,'cbt2/welcome.html')
 def usersignup(request):
     if request.method =='GET':
         form=forms.signupform()
@@ -88,7 +90,7 @@ def auth_view(request):
         request.session['username']=user.get_username()
         if user.is_superuser:
             return HttpResponseRedirect('/admin_page/')
-        return HttpResponseRedirect('/accounts/loggedin')
+        return HttpResponseRedirect('/welcome/')
     else:
         return HttpResponseRedirect('/accounts/invalid')
 
@@ -107,12 +109,14 @@ def invalid_login(request):
 
 
 # function that log out user
+
 def logout(request):
     auth.logout(request)
     return render(request,'cbt2/logout.html')
 
 
 # function for recording and handelling froms.userdetails form
+@login_required(login_url='/accounts/login/')
 def user_details(request):
     if request.method == 'GET':
         form=userdetails()
@@ -136,6 +140,7 @@ def user_details(request):
 
 
 # function for recording and handelling forms.familydetails form
+@login_required(login_url='/accounts/login/')
 def family_details(request):
     if request.method == 'GET':
         form=familydetails()
@@ -157,6 +162,7 @@ def family_details(request):
     return render(request,'cbt2/userfamilyinfo.html',{'form': form})
 
 # function for taking involvement extent of user family 
+@login_required(login_url='/accounts/login/')
 def settings(request):
     if request.method == 'GET':
         form=involvement()
@@ -171,6 +177,7 @@ def settings(request):
     return render(request,'cbt2/setting.html',{'form':form})
 
 #function for recording and handelling user's depression and anxiety quiz
+@login_required(login_url='/accounts/login/')
 def depression_score(request,num):
     if not request.user.is_authenticated():
         return redirect('%s?next=%s' % (settings.LOGIN_URL, request.path))
@@ -214,6 +221,7 @@ def depression_score(request,num):
     #"""
     
 #function to show any of list given in argument
+@login_required(login_url='/accounts/login/')
 def show_list(request,sender,reciever,num,list_size):
     try:
         x=list_size*(int(num)-1)
@@ -223,6 +231,7 @@ def show_list(request,sender,reciever,num,list_size):
         return HttpResponse('<html><body>error </body></html>')
 
 #function for recording the choosen options of show list function
+@login_required(login_url='/accounts/login/')
 def set_list(request,to_set,sender,reciever,num,list_size):
     try:
         username=request.session['username']
@@ -238,31 +247,39 @@ def set_list(request,to_set,sender,reciever,num,list_size):
         return HttpResponse('error'+str(e))
 
 
+@login_required(login_url='/accounts/login/')
 def set_corebeliefs(request,num):
     return set_list(request,to_set=models.Userscb,sender=models.Corebelief,reciever='intermediatebeliefs',num=num,list_size=corebelief_list_size)
 
+@login_required(login_url='/accounts/login/')
 def show_corebeliefs(request,num):
     global corebelief_list_size
     return show_list(request,sender=models.Corebelief,reciever='corebelief',num=num,list_size = corebelief_list_size)
+
 
 def show_intermediatebeliefs(request,num):
     global intermediatebelief_list_size
     return show_list(request,sender=models.Intermediatebelief,reciever='intermediatebelief',num=num,list_size = intermediatebelief_list_size)
 
+@login_required(login_url='/accounts/login/')
 def show_persistentnats(request,num):
     global persistentnat_list_size
     return show_list(request,sender=models.Persistentnat,reciever='persistentnat',num=num,list_size = persistentnat_list_size)
 
+@login_required(login_url='/accounts/login/')
 def show_events(request,num):
     global event_list_size
     return show_list(request,sender=models.Eventlist,reciever='event',num=num,list_size=event_list_size)
 
+@login_required(login_url='/accounts/login/')
 def set_intermediatebeliefs(request,num):
     return set_list(request,to_set=models.Usersib,sender=models.Intermediatebelief,reciever='persistentnats',num=num,list_size=intermediatebelief_list_size)
    
+@login_required(login_url='/accounts/login/')
 def set_persistentnats(request,num):
     return set_list(request,to_set=models.Userpnat,sender=models.Persistentnat,reciever='events',num=num,list_size=persistentnat_list_size)
 
+@login_required(login_url='/accounts/login/')
 def set_events(request,num):
     return set_list(request,to_set=models.Userevent,sender=models.Eventlist,reciever='events',num=num,list_size=event_list_size)
 

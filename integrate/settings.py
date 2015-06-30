@@ -41,6 +41,7 @@ INSTALLED_APPS = (
     'cbt2',
     'conversationmanager',
     'exercise',
+    'defaultapp',
 )
 
 MIDDLEWARE_CLASSES = (
