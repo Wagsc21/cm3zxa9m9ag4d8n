@@ -1,178 +1,124 @@
-/*
 $(document).ready(function(){
-	//console.log(breaktext($('#choice-text').text()));
-	//$choice_text = $(".choice-text");
-	$dialog_text = $("#dialog-text");
-	$user_avatar = $("#user-avatar");
-	$button_class = $("#button-class");
-	$to_be_updated = $(".to-be-updated");
-	//$choice_text.replaceWith("<button type=\"submit\" name=\"option\" value={{choice.optionID}} class=\"btn btn-success\" id=\"choice-text\"><pre>"+breaktext($choice_text.text())+"</pre></button>");
-	$dialog_text.textillate({ 
-		in: { 
-			effect: 'fadeIn',
-			delay: 5
-		},
-	});
-	$dialog_text.on("end.tlt", function(){
-		//I am having to use button class here but ideally I should be using $choice_text; this might lead to problems later on, keep a watch on it
-		$(".btn").removeClass("hidden");
-		$user_avatar.removeClass("hidden");
-	});
-	/*
-	$(".choice-text").click(function(event){
-		console.log("reaching here");
-		event.preventDefault();
-		var $form = $("#conversation-form"),
-			//name = $form.find("button[name=\"option\"]").val(),
-			option = $(this).val();
-			console.log(option);
-			dialog = $form.find("input[name=\"dialog\"]").val(),
-			console.log(dialog);
-			url = $form.attr("action");
-			console.log(option, dialog);
-			confirm(option+" "+dialog);
-		var csrftoken = getCookie("csrftoken");
-		var ajaxPosting = $.ajax({
-			type: "POST",
-			//dataType: "json",
-			url: url, 
-			data: {
-				csrfmiddlewaretoken: document.getElementsByName('csrfmiddlewaretoken')[0].value, 
-				option: option, 
-				dialog: dialog
-			},
-			//console.log("reaching here");
-			success:function(data){
-			
-				$next_dialog = $(data).find("#dialog-text").text();
-				//console.log($data);
-				$dialog_text.replaceWith("<p id=\"dialog-text\">"+$next_dialog+"</p>");
-				$button_class.replaceWith($(data).find("#button-class").html());
-				$to_be_updated = $(".to-be-updated");
-				$to_be_updated.replaceWith("<div class=\"to-be-updated\">"+$(data).find(".to-be-updated").html()+"</div>");
-			}
-		});
-		
-		posting.done(function(data){
-			//$dialog_text.replaceWith("<p id=\"dialog-text\">{{"++"}}</p>");
-			//confirm("reaching here");
-			$data = $(data).find(dialog);
-			console.log($data);
-		});
-
-	});
-});
-
-//apparently this is not needed; you can include a pre around the choice text in html and it will display a pre formatted text; if you feel a text is too long, then
-// break it in various lines
-var breaktext = function(inputString){
-	var newString='';
-	var stringArray = inputString.split(",");
-	for(var i=0; i<stringArray.length; i++){
-		newString+="\n"+stringArray[i];
-	}
-	console.log(newString);
-	return newString;
-}
-
-var getCookie = function(name) {
-    var cookieValue = null;
-    if (document.cookie && document.cookie != '') {
-        var cookies = document.cookie.split(';');
-        for (var i = 0; i < cookies.length; i++) {
-            var cookie = jQuery.trim(cookies[i]);
-            // Does this cookie string begin with the name we want?
-            if (cookie.substring(0, name.length + 1) == (name + '=')) {
-                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                break;
-            }
-        }
-    }
-    return cookieValue;
-}*/
-
-$(document).ready(function(){
-	//this little code makes the dailog text fadeIn gradually and displays the user options and avatar only after the entire text is displayed
-	/*
-	$dialog_text = $("#dialog-text");
-	$user_avatar = $("#user-avatar");
-	$dialog_text.textillate({ 
-		in: { 
-			effect: 'fadeIn',
-			delay: 5
-		},
-	});
-	$dialog_text.on("end.tlt", function(){
-		//I am having to use button class here but ideally I should be using $choice_text; this might lead to problems later on, keep a watch on it
-		$(".btn").removeClass("hidden");
-		$user_avatar.removeClass("hidden");
-	});*/
 	allEffects();
-	//adding first conversation to conversation history
-
-
-	var csrftoken = $.cookie('csrftoken');
-	$.ajaxSetup({
-		beforeSend: function(xhr, settings) {
-			if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
-				xhr.setRequestHeader("X-CSRFToken", csrftoken);
-			}
-		}
-	});
-
-	$(".choice-text").click(function(event){
-		console.log("reaching here");
-		event.preventDefault();
+	$choice_text = $(".choice-text");
+	$pre_text = $(".pre-text");
+	$hidden_input = $("input[name=\"dialog\"]");
+	$button_div = $(".button-div");
+	$button_row = $(".button-row");
+	var backgroundColor = "white";
+	var saveConversationHistory = "";
+	
+	$(document).on('click', '.choice-text', function (ev) {
+	    ev.preventDefault();
+		//console.log("reaching here");
+		//event.preventDefault();
 		//appending option to conversation history
+
+		var dialogHistoryText = $(".bg-danger").text();
+		saveConversationHistory+=">DP:"+dialogHistoryText+";\n";
+		var optionHistoryText =  $(this).text();
+		saveConversationHistory+=">U:"+optionHistoryText+";\n";
 		
-		$conversation_history.append("<p>"+$(this).text()+"</p>");
-		var $form = $("#conversation-form"),
-			//name = $form.find("button[name=\"option\"]").val(),
-			option = $(this).val();
-			console.log(option);
+
+		var startMarker = "!WRONG_CONVERSATION_START!";
+		var endMarker = "!CORRECT_THREAD!";
+
+		//modify this code to make the background of that part of conversation turn red where it has gone wrong
+		if(optionHistoryText.includes(startMarker)){
+			backgroundColor = "red";
+			optionHistoryText = optionHistoryText.substring(0, optionHistoryText.indexOf(startMarker));
+			console.log(optionHistoryText);
+		}
+		if(optionHistoryText.includes(endMarker)){
+			backgroundColor = "white";
+			optionHistoryText = optionHistoryText.substring(0, optionHistoryText.indexOf(endMarker));
+			console.log(optionHistoryText);
+		}
+
+		conversationHistoryRow("dialog", dialogHistoryText, backgroundColor);
+		conversationHistoryRow("option", optionHistoryText, backgroundColor);
+		
+		var $form = $("#conversation-form");
+			option = parseInt($(this).attr('href'));
 			dialog = $form.find("input[name=\"dialog\"]").val(),
-			console.log(dialog);
-			url = $form.attr("action");
-			console.log(option, dialog);
-			//confirm(option+" "+dialog);
-			
+			url = $form.attr("action"+"/");
 			$.ajax({
 				type: "POST",
-				url: url, 
+				url: url,
 				data: {
-					csrftoken: csrftoken, 
+					//csrftoken: csrftoken, 
 					option: option, 
 					dialog: dialog
 				},
-				//console.log("reaching here");
+				beforeSend: function(xhr){
+					console.log("reaching here");
+					xhr.setRequestHeader('X-CSRFToken', $.cookie('csrftoken'));
+				},
 				success:function(data){
-					/*
-					$next_dialog = $(data).find("#dialog-text").text();
-					//console.log($data);
-					$dialog_text.replaceWith("<p id=\"dialog-text\">"+$next_dialog+"</p>");
-					$button_class.replaceWith($(data).find("#button-class").html());*/
 					$to_be_updated = $(".to-be-updated");
 					$to_be_updated.replaceWith("<div class=\"to-be-updated\">"+$(data).find(".to-be-updated").html()+"</div>");
-					//this little code makes the dailog text fadeIn gradually and displays the user options and avatar only after the entire text is displayed
+					
+					
+					/*this little code should makes the dailog text fadeIn gradually and displays the user 
+					options and avatar only after the entire text is displayed; but it is disabled because it was causing dialog to  
+					be stored twice in history		
+					*/
 					allEffects();
+					//setting focus on button once the history becomes long enough and the user has to scroll to get to the main dialog and option
+					$('.choice-text').focus();
+					if(parseInt($("a[name=\"option\"]").attr('href'))){
+						console.log(parseInt($("a[name=\"option\"]").attr('href')));
+					}else{
+						console.log("conversation ended");
+						$(".button-row").replaceWith("<button class=\"btn btn-success pull-right\" id=\"finish-btn\">Finish!</button>");
+					}
+					
+				},
+				
+				error: function(xhr,errmsg,err){
+					alert(xhr.status + ": " + xhr.responseText);
 				}
-		});
-		});
-//this little code makes the dailog text fadeIn gradually and displays the user options and avatar only after the entire text is displayed
-
+			});
+	});
+	
+	$(document).on('click', '#finish-btn', function (ev) {
+		ev.preventDefault();
+		console.log(saveConversationHistory);
+		confirm("show next conversation");
+		var url = "/history/"
+		var conversationID = $("input[name=\"conversationID\"]").val();
+		console.log(conversationID+";"+$("input[name=\"conversationID\"]").val());
+		$.ajax({
+				type: "POST",
+				url: url, //get the url here
+				data: {
+					//csrftoken: csrftoken, 
+					history: saveConversationHistory, 
+					conversationID: conversationID,
+				},
+				beforeSend: function(xhr){
+					console.log("reaching here");
+					xhr.setRequestHeader('X-CSRFToken', $.cookie('csrftoken'));
+				},
+				success:function(data){
+					console.log($(data).find("history"));
+				},
+				
+				error: function(xhr,errmsg,err){
+					alert(xhr.status + ": " + xhr.responseText);
+				}
+			});
+	});
 });
 
-//for csrf hoopla
-var csrfSafeMethod = function(method) {
-    // these HTTP methods do not require CSRF protection
-    return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
-}
-
-//this little code makes the dailog text fadeIn gradually and displays the user options and avatar only after the entire text is displayed
 var allEffects = function(){
 	$dialog_text = $("#dialog-text");
 	$user_avatar = $("#user-avatar");
 	$choice_text = $(".choice-text");
+	$choice_text.removeClass("hidden");
+	$user_avatar.removeClass("hidden");
+	$conversation_history = $(".conversation-history");
+		/*
 	$dialog_text.textillate({ 
 		in: { 
 			effect: 'fadeIn',
@@ -180,15 +126,37 @@ var allEffects = function(){
 		},
 	});
 	$dialog_text.on("end.tlt", function(){
-					//I am having to use button class here but ideally I should be using $choice_text; this might lead to problems later on, keep a watch on it
+		//I am having to use button class here but ideally I should be using $choice_text; this might lead to problems later on, keep a watch on it
 		$choice_text.removeClass("hidden");
 		$user_avatar.removeClass("hidden");
 		$conversation_history = $(".conversation-history");
-		$conversation_history.append("<p>"+$("#dialog-text").text()+"</p>");
-	});
+		//$conversation_history.append("<p>"+$dialog_text.text()+"</p>");
+		//console.log($dialog_text.text());
+	});*/
 }
 
-var saveConversationHistory = function(dialog, option){
-	$conversation_history = $(".conversation-history");
-	$conversation_history.append("<pre></pre>");
+/*
+see how to set images dynamically
+*/
+var conversationHistoryRow = function(type, text, backgroundColor){
+	if(type === "dialog"){
+		//$conversation_history.append("<p class=\"pull-left\" style=\"color:red\"><br>"+text+"<br></p>");
+		$conversation_history.append("<div class=\"row\">\
+			<div class=\"col-lg-1 col-md-1 col-sm-2 col-xs-2\">\
+				<img src=\"/static/conversationmanager/images/dummypatient_avatar/dummypatient_avatar.jpg\" style=\"width:50px;height:50px\" class=\"img-thumbnail img-responsive pull-left dummypatient-thumbnail-img\">\
+			</div>\
+			<div class=\"col-lg-10 col-md-10 col-sm-10 col-xs-10\">\
+				<p class=\"pull-left bubble\" style=\"color:black;background-color:"+backgroundColor+";\"><br>"+text+"<br></p>\
+			</div>\
+		</div>");
+	}else if(type === "option"){
+		$conversation_history.append("<div class=\"row\">\
+			<div class=\"col-lg-11 col-md-11 col-sm-10 col-xs-10\">\
+				<p class=\"pull-right bubble\" style=\"color:blue;background-color:"+backgroundColor+";\"><br>"+text+"<br></p>\
+			</div>\
+			<div class=\"col-lg-1 col-md-1 col-sm-2 col-xs-2\">\
+				<img src=\"/static/conversationmanager/images/therapist_avatar/therapist_avatar.png\" style=\"width:50px;height:50px\" class=\"img-thumbnail img-responsive pull-right\">\
+			</div>\
+		</div>");
+	}
 }

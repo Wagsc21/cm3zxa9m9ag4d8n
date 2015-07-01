@@ -1,3 +1,4 @@
+
 <doctype!>
 <html>
 	<head>
@@ -5,11 +6,33 @@
 	</head>
 	<body>
 		<form action="/conversation/" method="post">{% csrf_token %}
-		<p>Hi! {{user}}</p>
 		{%  for conversation in conversations  %}
-		<input type="submit" name="conversation" value="{{conversation.conversationID}}">
-		
+		<input type="submit" name="conversationID" value="{{conversation}}">
 		{% endfor %}
 		</form>
 	</body>
 </html>
+<!--
+<!DOCTYPE html>
+<html>
+<head>
+	{% load staticfiles %}
+	<title></title>
+	<link rel="stylesheet" href="{% static 'conversationmanager/bootstrap/css/bootstrap.min.css' %}">
+ 	<link rel="stylesheet" type="text/css" href="{% static 'conversationmanager/.css' %}">
+    
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
+    <script type="text/javascript" src="static/depression_javascript.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.js"></script>
+    <script src="http://code.jquery.com/ui/1.11.0/jquery-ui.js"></script>
+    <link rel="stylesheet" href="http://code.jquery.com/ui/1.10.4/themes/redmond/jquery-ui.css">
+    <script type="text/javascript" src="{% static 'conversationmanager/bootstrap/js/bootstrap.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'conversationmanager/.js' %}"></script>
+}
+</head>
+<body>
+
+</body>
+</html>-->

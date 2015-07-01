@@ -4,6 +4,7 @@ from django.core.context_processors import csrf
 from django.shortcuts import render,render_to_response , get_object_or_404 , get_list_or_404
 from django.http import HttpResponse, HttpResponseRedirect 
 from django.core.urlresolvers import reverse
+from django.contrib.auth.decorators import login_required
 #from .forms import * 
 from django.core import serializers
 from django.views.decorators.cache import cache_control
@@ -18,10 +19,11 @@ from django.db.models import Q , Max
 #"""
 
  # function for carrying out the conversation with conversation id as only input
+@login_required(login_url='/accounts/login/')
 def carry_out_conversation(request):
-    
     username=request.session['username']
-    user=User.objects.get(username=username)    
+    user=User.objects.get(username=username)  
+        
     if not request.POST.get('dialog',None) == None:
         
         if not request.POST.get('option',None) == None:
@@ -36,29 +38,29 @@ def carry_out_conversation(request):
                 option_list=[]
                 for opt in optionset:
                     option_list.append(opt.option)
-                models.Userconversation.objects.create(user=user,dialog=qset[0].current_dialog,option_selected=qset[0].option,conversation_time=datetime.now(),conversationID=conversationID)
-                return render(request,'conversationmanager/conversation.html',{'option_list': option_list,'dialog':dialog})
+                #models.Userconversation.objects.create(user=user,dialog=qset[0].current_dialog,option_selected=qset[0].option,conversation_time=datetime.now(),conversationID=conversationID)
+                return render(request,'conversationmanager/conversation.html',{'option_list': option_list,'dialog':dialog,'conversationID':request.session['conversationID']})
             except(KeyError):
                 return HttpResponse('keyerror in carrying it out')
     
     else:
         try:
-            conversationID=models.Conversation.objects.get(conversationID=request.POST['conversation'])
+            conversationID=models.Conversation.objects.get(conversationID=request.POST['conversationID'])
             fullconversationset=models.Dialogs.objects.filter(conversationID=conversationID).order_by('dialog')
             optionset=models.Conversationoptiongraph.objects.filter(current_dialog = fullconversationset[0])
-            request.session['conversationID']=request.POST['conversation']
+            request.session['conversationID']=request.POST['conversationID']
             option_list=[]
             for opt in optionset:
                 option_list.append(opt.option)
             #models.Userconversation.objects.create(user=user,conversation=fullconversationset[0],option_selected=qset[0].option,conversation_time=datetime.now())
-            return render(request,'conversationmanager/conversation.html',{'option_list': option_list,'dialog':fullconversationset[0]})
+            return render(request,'conversationmanager/conversation.html',{'option_list': option_list,'dialog':fullconversationset[0],'conversationID':request.session['conversationID']})
         except(KeyError):
             return HttpResponseRedirect('/conversation_page/')
 
     
-def conversation_page(request):
-    conversations=models.Conversation.objects.all()
-    return render(request,'conversationmanager/conversation_page.html',{'conversations': conversations})
+#def conversation_page(request):
+    #conversations=models.Conversation.objects.all()
+    #return render(request,'conversationmanager/conversation_page.html',{'conversations': conversations})
 
 
 @user_passes_test(lambda u: u.is_superuser)
@@ -70,6 +72,8 @@ def conversation(request):
 @user_passes_test(lambda u: u.is_superuser)
 #----------------------------------------------------------------------
 def add_conversation(request):
+    if request.POST.get('conversationid') ==None:
+        return HttpResponseRedirect("/admin_page/")
     conversation=models.Conversation.objects.filter(conversationID=int(request.POST.get('conversationid')))
     if conversation.exists():
         return render(request,"conversationmanager/goback.html",{'message':'%s already exist' % request.POST.get('conversationid')})    
@@ -153,3 +157,32 @@ def apply_update(request):
     
     return edit_conversation(request)
    
+#----------------------------------------------------------------------
+def history(request):
+    user=request.user
+    conversationID=models.Conversation.objects.get(conversationID=int(request.POST.get('conversationID')))
+    #HttpResponse(request.POST.get('conversationID'))
+    try:
+        history=models.ConversationHistory.objects.get(user=user,conversationID=conversationID)
+        history.history=request.POST.get('history')
+        history.save()
+        #return HttpResponse(request.POST.get('history'))
+        return render(request,{'history':request.POST.get('history')})
+    except models.ConversationHistory.DoesNotExist:
+        history=models.ConversationHistory.objects.create(user=user,conversationID=conversationID,history=request.POST.get('history'))
+        return HttpResponse('history created')
+
+#----------------------------------------------------------------------
+def show_history(request):
+    user=request.user
+    if request.POST.get('conversationID',None) == None:
+        return HttpResponseRedirect("/welcome/")
+    conversation=get_object_or_404(models.Conversation,conversationID=int(request.POST.get('conversationID')))    
+    try:
+        history=models.ConversationHistory.objects.get(user=user,conversationID=conversation)
+        return render(request,'conversationmanager/show_history.html',{'history': history,'conversationID':request.POST.get('conversationID')})
+    except models.ConversationHistory.DoesNotExist:
+        return HttpResponse("NO history")
+    #return HttpResponse('error')
+   
+    

@@ -178,47 +178,51 @@ def settings(request):
 
 #function for recording and handelling user's depression and anxiety quiz
 @login_required(login_url='/accounts/login/')
-def depression_score(request,num):
-    if not request.user.is_authenticated():
-        return redirect('%s?next=%s' % (settings.LOGIN_URL, request.path))
-    if request.method == 'GET':
-        form=request.GET
-    elif request.method == 'POST':
-        form=request.POST
-    username=request.session['username']
-    user=User.objects.get(username=username)  
-    try:
-        q1=0
-        q2=''
-        stri=''
-        if int(num) == 9:
-            stri=stri+'depression'
-            for i in range (1,int(num)+1):
-                h=request.POST.get('depression_question_0%d' %i)
-                q1=q1+int(h)
-                q2=q2+h
-            models.Test.objects.filter(user=user).update(dsasweek1=q2)
-            return HttpResponseRedirect('/anxiety_quiz/')
-        elif int(num) == 7:
-            stri=stri+'anxiety'
-            for i in range (1,int(num)+1):
-                h=request.POST.get('anxiety_question_0%d' %i)
-                q1=q1+int(h)
-                q2=q2+h
-            models.Test.objects.filter(user=user).update(asweek1=q2)
-            return HttpResponseRedirect('/corebeliefs/1')  
-                              
+def set_depression_score(request):
+    user=request.user
+    module_number=request.POST.get('module_number')
+    score=request.POST.get('score')
+    user_test=models.Test.objects.get(user=user)
+    if module_number == '1':
+        user_test.dsasweek1=score
+    elif module_number == '2':
+        user_test.dsasweek2=score
+    elif module_number == '3':
+        user_test.dsasweek3=score
+    elif module_number == '4':
+        user_test.dsasweek4=score
+    elif module_number == '5':
+        user_test.dsasweek5=score
+    elif module_number == '6':
+        user_test.dsasweek6=score
+    elif module_number == '7':
+        user_test.dsasweek7=score
+    user_test.save()
+    return HttpResponseRedirect("/anxiety_quiz/")
+
+@login_required(login_url='/accounts/login/')
+def set_anxiety_score(request):
+    user=request.user
+    module_number=request.POST.get('module_number')
+    score=request.POST.get('score')
+    user_test=models.Test.objects.get(user=user)
+    if module_number == '1':
+        user_test.asweek1=score
+    elif module_number == '2':
+        user_test.asweek2=score
+    elif module_number == '3':
+        user_test.asweek3=score
+    elif module_number == '4':
+        user_test.asweek4=score
+    elif module_number == '5':
+        user_test.asweek5=score
+    elif module_number == '6':
+        user_test.asweek6=score
+    elif module_number == '7':
+        user_test.asweek7=score
+    user_test.save()
+    return HttpResponseRedirect("/module/")
         
-    except:
-        if int(num) == 9:
-            return render(request,'cbt2/depression.html',{'error_message': "select one option for each question",'quiz_list':depression_list},)
-        elif int(num) == 7:
-            return render(request,'cbt2/anxiety.html',{'error_message': "select one option for each question",'quiz_list': anxiety_list},)
-            
-    else:
-        return HttpResponse('<hmtl><body>done for</body></html>')
-            
-    #"""
     
 #function to show any of list given in argument
 @login_required(login_url='/accounts/login/')
@@ -285,10 +289,61 @@ def set_events(request,num):
 
 @login_required(login_url='/accounts/login/')
 def show_depressionquiz(request):
-    #return HttpResponse(depression_list)
-    if not request.user.is_authenticated():
-        return render(request,'cbt2/base.html')    
-    return render(request,'cbt2/depression.html',{'quiz_list': depression_list})
+    module_number=request.POST.get('module_number',None)
+    user=request.user
+    #return HttpResponse(module_number)
+    if module_number == None:
+        return HttpResponseRedirect('/welcome/')
+    request.session['module_number']=module_number
+    user_test=models.Test.objects.get(user=user)
+    #return HttpResponse(test.dsasweek1)
+    if module_number == '1':
+        if user_test.dsasweek1 == '':
+            return render(request,'cbt2/depression_assessment_questionnaire.html',{'module_number':module_number})
+    elif module_number == '2':
+        if user_test.dsasweek2 == '':
+            return render(request,'cbt2/depression_assessment_questionnaire.html',{'module_number':module_number})
+    elif module_number == '3':
+        if user_test.dsasweek3 =='':
+            return render(request,'cbt2/depression_assessment_questionnaire.html',{'module_number':module_number})
+    elif module_number == '4':
+        if user_test.dsasweek4 =='':
+            return render(request,'cbt2/depression_assessment_questionnaire.html',{'module_number':module_number})
+    elif module_number == '5':
+        if user_test.dsasweek5 =='':
+            return render(request,'cbt2/depression_assessment_questionnaire.html',{'module_number':module_number})
+    elif module_number == '6':
+        if user_test.dsasweek6 =='':
+            return render(request,'cbt2/depression_assessment_questionnaire.html',{'module_number':module_number})
+    else:
+        return render(request,'cbt2/depression_assessment_questionnaire.html',{'module_number':module_number})
+    return HttpResponseRedirect('/anxiety_quiz/')
 
 def show_anxietyquiz(request):
-    return render(request,'cbt2/anxiety.html',{'quiz_list': anxiety_list})
+    module_number=request.session['module_number']
+    user=request.user
+    user_test=models.Test.objects.get(user=user)
+    if module_number == '1':
+        if user_test.asweek1 == '':
+            return render(request,'cbt2/anxiety_assesment_questionnaire.html',{'module_number':module_number})
+    elif module_number == '2':
+        if user_test.asweek2 == '':
+            return render(request,'cbt2/anxiety_assesment_questionnaire.html',{'module_number':module_number})
+    elif module_number == '3':
+        if user_test.asweek3 =='':
+            return render(request,'cbt2/anxiety_assesment_questionnaire.html',{'module_number':module_number})
+    elif module_number == '4':
+        if user_test.asweek4 =='':
+            return render(request,'cbt2/anxiety_assesment_questionnaire.html',{'module_number':module_number})
+    elif module_number == '5':
+        if user_test.asweek5 =='':
+            return render(request,'cbt2/anxiety_assesment_questionnaire.html',{'module_number':module_number})
+    elif module_number == '6':
+        if user_test.asweek6 =='':
+            return render(request,'cbt2/anxiety_assesment_questionnaire.html',{'module_number':module_number})
+    else:
+        return render(request,'cbt2/anxiety_assesment_questionnaire.html',{'module_number':module_number})
+    return HttpResponseRedirect('/module/')
+    
+        
+   

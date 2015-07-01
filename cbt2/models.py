@@ -67,11 +67,15 @@ class Test(models.Model):
     dsasweek3=models.CharField(max_length=50,blank=True,null=True)
     dsasweek4=models.CharField(max_length=50,blank=True,null=True)
     dsasweek5=models.CharField(max_length=50,blank=True,null=True)
+    dsasweek6=models.CharField(max_length=50,blank=True,null=True)
+    dsasweek7=models.CharField(max_length=50,blank=True,null=True)    
     asweek1=models.CharField(max_length=50,blank=True,null=True)
     asweek2=models.CharField(max_length=50,blank=True,null=True)
     asweek3=models.CharField(max_length=50,blank=True,null=True)
     asweek4=models.CharField(max_length=50,blank=True,null=True)
-    asweek5=models.CharField(max_length=50,blank=True,null=True)    
+    asweek5=models.CharField(max_length=50,blank=True,null=True)
+    asweek6=models.CharField(max_length=50,blank=True,null=True)
+    asweek7=models.CharField(max_length=50,blank=True,null=True)
     
     def __str__(self):
         return str(self.user)

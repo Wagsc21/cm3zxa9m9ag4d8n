@@ -1,0 +1,17 @@
+
+#question-text{
+	color: white;
+	border: 2px solid black;
+	background-color: black;
+	padding: 10px;
+	margin: 10px;
+}
+#carousel-example-generic{
+	background-color: rgba(0, 255, 158, 0.33);
+}
+
+#inner-carousel img {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}

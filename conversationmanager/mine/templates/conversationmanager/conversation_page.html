@@ -1,0 +1,31 @@
+<doctype!>
+<html>
+	<head>
+		<title> this is conversation page</title>
+	</head>
+	<body>
+		<form action="/conversation/" method="post">{% csrf_token %}
+		<p>Hi! {{user}}</p>
+		{%  for conversation in conversations  %}
+		<input type="submit" name="conversationID" value="{{conversation.conversationID}}">
+		
+		{% endfor %}
+		{%  for ibconversation in ibconversations  %}
+		<input type="submit" name="conversationID" value="{{ibconversation.conversationID}}">
+		
+		{% endfor %}
+		{%  for cbconversation in cbconversations  %}
+		<input type="submit" name="conversationID" value="{{cbconversation.conversationID}}">
+		
+		{% endfor %}
+		{%  for pnatconversation in pnatconversations  %}
+		<input type="submit" name="conversationID" value="{{pnatconversation.conversationID}}">
+		
+		{% endfor %}
+		{%  for eventlistconversation in eventlistconversations  %}
+		<input type="submit" name="conversation" value="{{eventlistconversation.conversationID}}">
+		
+		{% endfor %}
+		</form>
+	</body>
+</html>

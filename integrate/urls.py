@@ -31,9 +31,10 @@ urlpatterns = [
     url(r'^accounts/logout/$', 'cbt2.views.logout'),
     url(r'^accounts/loggedin/$', 'cbt2.views.loggedin'),
     url(r'^accounts/invalid/$', 'cbt2.views.invalid_login'),
-    url(r'^depression_quiz/','cbt2.views.show_depressionquiz'),
-    url(r'^anxiety_quiz/','cbt2.views.show_anxietyquiz'),
-    url(r'^result/(?P<num>[0-9]+)$','cbt2.views.depression_score'),
+    url(r'^depression_quiz/submit/$','cbt2.views.set_depression_score'),
+    url(r'^anxiety_quiz/submit/$','cbt2.views.set_anxiety_score'),    
+    url(r'^depression_quiz/$','cbt2.views.show_depressionquiz'),
+    url(r'^anxiety_quiz/$','cbt2.views.show_anxietyquiz'),
     url(r'^corebeliefs/(?P<num>[0-9]+)$','cbt2.views.show_corebeliefs'),
     url(r'^intermediatebeliefs/(?P<num>[0-9]+)$','cbt2.views.show_intermediatebeliefs'),
     url(r'^corebelief/submit/(?P<num>[0-9]+)/$','cbt2.views.set_corebeliefs'),
@@ -43,7 +44,7 @@ urlpatterns = [
     url(r'^events/(?P<num>[0-9]+)$','cbt2.views.show_events'),
     url(r'^event/submit/(?P<num>[0-9]+)/$','cbt2.views.set_events'),
     url(r'^conversation/$','conversationmanager.views.carry_out_conversation'),
-    url(r'^conversation_page/','conversationmanager.views.conversation_page'),
+    #url(r'^conversation_page/','conversationmanager.views.conversation_page'),
     url(r'^add/conversations/$','conversationmanager.views.conversation'),
     url(r'^conversations/$','conversationmanager.views.add_conversation'),
     url(r'^admin_page/$','conversationmanager.views.admin'),
@@ -56,6 +57,8 @@ urlpatterns = [
     url(r'add/exercises/$','exercise.views.exercise'),
     url(r'add/exercises/done/$','exercise.views.add_exercise'),
     url(r'^module/$','defaultapp.views.modulemanager'),
-    url(r'^technique/$','defaultapp.views.moduletechnique')
+    url(r'^technique/$','defaultapp.views.moduletechnique'),
+    url(r'^history/$','conversationmanager.views.history'),
+    url(r'^show/history/$','conversationmanager.views.show_history')
 
 ]

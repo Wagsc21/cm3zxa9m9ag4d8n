@@ -1,0 +1,18 @@
+<DOCTYPE!>
+<hmtl>
+	<head>
+		<title>this is a demo conversation</title>
+	</head>
+	<body>
+		<form action="/conversation/" method="post"> {% csrf_token %}
+		<p> {{dialog.dialog_text}} </p>
+		<input type="hidden" name="dialog" value = "{{dialog.dialog}}" > 
+		{% for choice in option_list %}
+
+			<input type="radio" name="option" value={{choice.optionID}} > {{choice.option_text}} <br>
+		{% endfor %}
+		<input type="submit" value="Submit">
+
+		</form>
+	</body>
+</hmtl>

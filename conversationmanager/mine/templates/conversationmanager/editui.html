@@ -1,0 +1,15 @@
+<doctype!>
+<html>
+<head>
+<title>update page</title>
+</head>
+<body>
+  <form action="/edit/conversations/" method="post" >{% csrf_token %}
+    <div>
+          <label>conversationID &nbsp; <input  type="text" name="conversationid" required></label>
+    </div>
+    <input type="submit" value="get rows" >
+    <p><a href="/admin_page/">go to home page</a></p>
+  </form>
+</body>
+</html>

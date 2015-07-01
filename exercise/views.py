@@ -9,37 +9,47 @@ from django.core import serializers
 from django.views.decorators.cache import cache_control
 from datetime import datetime
 from django.conf import settings
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from . import models
 from django.contrib.auth.decorators import user_passes_test
 from django.db.models import Q , Max
 
+@login_required(login_url='/accounts/login/')
 def show_exercise_list(request):
     exercise_list=models.ExerciseConversation.objects.filter(conversation_type='Base')
     return render(request,'exercise/exercise_page.html',{'exercise_list':exercise_list})
 
+@login_required(login_url='/accounts/login/')
 def show_exercise(request):
     conversationID=request.POST.get('conversationid')
+    # module number to be used for setting messages specific to a module
+    module_number=request.POST.get('module_number')
+    #return HttpResponse(module_number)    
     conversation=models.ExerciseConversation.objects.get(conversationID=conversationID)
-    return render(request,'exercise/conversation.html',{'conversation':conversation})
+    return render(request,'exercise/conversation.html',{'conversation':conversation,'module_number':module_number})
 
 #----------------------------------------------------------------------
+@login_required(login_url='/accounts/login/')
 def conversation(request):
-    conversation=models.ExerciseConversation.objects.get(conversationID=request.POST.get('conversationid'))
+    conversation=models.ExerciseConversation.objects.filter(conversationID=request.POST.get('conversationid'))
     technique=request.POST.get('technique')
-    correct_technique=models.ConversationToModule.objects.get(conversation=conversation).correct_technique
+    correct_techniqu=models.ConversationToModule.objects.filter(conversationID__in=conversation).values_list("correct_technique")
+    correct_techniques=[]
+    correct_techniques.extend(correct_techniqu)
+    #return HttpResponse(correct_techniques)
     message=""
     try:
         next_conversation=models.ConversationToConversation.objects.get(base_conversation=conversation,technique=technique)
     except models.ConversationToConversation.DoesNotExist:
         message="no such technique"
         return  render(request,'exercise/conversation.html',{'conversation':conversation,'message':message})
+    for correct_technique in correct_techniques:
+        return HttpResponse(correct_techniques)
+        if str(correct_technique) == technique:
+            message=technique+" Great that worked. You helped the patient identify his/her NAT. see if there is any other technique as well "
+            return render(request,'exercise/done.html',{'conversation':conversation, 'next_conversation':next_conversation.technique_conversation,'message':message})
     
-
-    #return HttpResponse(next_conversation.technique_conversation.conversation_text)
-    if correct_technique == technique:
-        message=technique+" Great that worked. You helped the patient identify his/her NAT. see if there is any other technique as well "
-    else:
         message="it looks like "+technique+" did not quite help the patient Identify the NAT. Go back and try a different technique. "
     return render(request,'exercise/done.html',{'conversation':conversation, 'next_conversation':next_conversation.technique_conversation,'message':message})
 
@@ -68,7 +78,7 @@ def add_exercise(request):
                 technique=models.ExerciseConversation.objects.create(conversationID=last_conversation+1,conversation_text=request.POST.get('technique_conversation[%d]' % i),conversation_type='Technique')
                 models.ConversationToConversation.objects.create(base_conversation=base,technique=request.POST.get('technique[%d]' % i),technique_conversation=technique)
                 if(not request.POST.get('is_correct[%d]' %i,None) == None):
-                    models.ConversationToModule.objects.create(module_number=int(request.POST.get('module_number')),conversation=base,correct_technique=request.POST.get('technique[%d]' % i))
+                    models.ConversationToModule.objects.create(module_number=int(request.POST.get('module_number')),conversationID=base,correct_technique=request.POST.get('technique[%d]' % i))
             except KeyError as e:
                 return HttpResponse("error"+ e)
             i=i+1

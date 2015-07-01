@@ -1,3 +1,4 @@
+<!--
 <DOCTYPE!>
 <hmtl>
 	<head>
@@ -6,7 +7,7 @@
 	<body>
 		<form action="/conversation/" method="post"> {% csrf_token %}
 		<p> {{dialog.dialog_text}} </p>
-		<input type="hidden" name="dialog" value = "{{dialog.dialog}}" > 
+		<input type="hidden" name="dialog" value = {{dialog.dialog}} > 
 		{% for choice in option_list %}
 
 			<input type="radio" name="option" value={{choice.optionID}} > {{choice.option_text}} <br>
@@ -15,4 +16,60 @@
 
 		</form>
 	</body>
-</hmtl>
+</hmtl>-->
+
+<!DOCTYPE html>
+<html>
+<head>
+	{% load staticfiles %}
+	<title></title>
+	<link rel="stylesheet" href="{% static 'conversationmanager/bootstrap/css/bootstrap.min.css' %}">
+	<link rel="stylesheet" type="text/css" href="{% static 'conversationmanager/animate.css' %}">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.js"></script>
+	<script src="http://code.jquery.com/ui/1.11.0/jquery-ui.js"></script>
+	<link rel="stylesheet" href="http://code.jquery.com/ui/1.10.4/themes/redmond/jquery-ui.css">
+	<script type="text/javascript" src="{% static 'conversationmanager/bootstrap/js/bootstrap.min.js' %}"></script>
+	<script type="text/javascript" src="{% static 'conversationmanager/jquery.lettering.js' %}"></script>
+	<script type="text/javascript" src="{% static 'conversationmanager/jquery.textillate.js' %}"></script>
+	<script type="text/javascript" src="{% static 'conversationmanager/jquery.cookie.js' %}"></script>
+	<script type="text/javascript" src="{% static 'conversationmanager/conversation_javascript.js' %}"></script>
+	<link rel="stylesheet" type="text/css" href="{% static 'conversationmanager/conversation_style.css' %}">
+</head>
+<body>
+	<div class="container conversation-history">
+	</div>
+	<form action="/conversation/" id="conversation-form">
+		<div class="to-be-updated">
+			<div class="container">
+				<div class="row">
+					<div class="col-lg-3 col-md-3 col-sm-2 col-xs-2">
+						<img src="{% static 'conversationmanager/images/dummypatient_avatar/dummypatient_avatar.jpg' %}" class="img-responsive img-thumbnail">
+					</div>
+					<div class="col-lg-9 col-md-9 col-sm-10 col-xs-10">
+						<blockquote class="bg-danger"><p>{{dialog.dialog_text}}</p></blockquote>
+						<input type="hidden" name="dialog" value = {{dialog.dialog}}>
+					</div>
+				</div>
+
+				<div class="row button-row">
+					{% for choice in option_list %}
+					<div class="col-lg-9 col-md-9 col-sm-10 col-xs-10 button-div">
+						<!-- using a hacky method here; I am setting the href of an anchor tag as the value of the option, god help me -->
+						<a name="option" href={{choice.optionID}} class="choice-text pull-right hidden"><p class="pre-text">{{choice.option_text}}</p></a>
+					</div>
+					{% endfor %}
+					<div class="col-lg-3 col-md-3 col-sm-2 col-xs-2">
+						<img src="{% static 'conversationmanager/images/therapist_avatar/therapist_avatar.png' %}" class="img-responsive img-thumbnail hidden pull-right" id="user-avatar">
+					</div>
+				</div>
+			</div>
+		</div>
+	</form>
+	<!-- This line might cause problems later on if you see this error conversationID'reaching here' it is probably caused by this line, 
+	put it inside the form in that case-->
+	<input type="hidden" name="conversationID" value="{{conversationID}}">
+</body>
+</html>

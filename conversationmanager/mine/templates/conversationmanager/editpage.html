@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>this is the edit page</title>
+	<script type="text/javascript">
+	var removerows = function  (tablebody) {
+      var rows = tablebody.getElementsByTagName("tr");
+      var len=rows.length
+      if(len > 0)
+        rows[len-1].parentNode.removeChild(rows[len-1]);
+    }
+
+    var addrows = function  (tablebody) {
+     	var rows = tablebody.getElementsByTagName("tr");
+        var len=rows.length
+        var row = document.createElement("tr");
+        var titlecell = document.createElement("td");
+        titlecell.appendChild(document.createTextNode("Row " + (len+1)));
+        row.appendChild(titlecell);
+        for (var j=0;j<3;j++)
+        {
+          var cell = document.createElement("td");
+          var input = document.createElement("input");
+          input.setAttribute("type", "text");
+          input.setAttribute("name", "row["+(len+1)+"]["+j+"]");
+          input.setAttribute("size","50");
+          cell.appendChild(input);
+          row.appendChild(cell);
+        }
+        tablebody.appendChild(row);
+    }
+
+    var adder = function  () {
+      var tablebody = document.getElementById("maintablebody");
+      console.log("head");
+      addrows(tablebody);
+    }
+    var remover=function () {
+      var tablebody=document.getElementById("maintablebody")
+      removerows(tablebody)
+      
+    }
+	</script>
+
+</head>
+<body>
+<p>conversation ID : {{conversationid}}</p>
+  <form action="/edit/conversations/done/" method="post" onsubmit="return row_validation()">{% csrf_token %}
+  <input type="hidden" name="conversationid" value="{{conversationid}}">
+    <div>
+    
+         
+          
+          <table id="maintable" >
+                  <th>&nbsp;</th>
+                  <th>current dialog</th>
+                  <th>option</th>
+                  <th>next dialog</th>
+                    <tbody id="maintablebody">
+                    {% for row in rows %}
+                    	<tr>
+                    		<td>Row{{forloop.counter}}</td>
+                    		<td><input type="text" name="row[{{forloop.counter}}][0]") value="{{row.current_dialog.dialog_text}}" size="50">
+                    		</td>
+                    		<td><input type="text" name="row[{{forloop.counter}}][1]") value="{{row.option.option_text}}" size="50">
+                    		</td>
+                    		<td><input type="text" name="row[{{forloop.counter}}][2]") value="{{row.next_dialog.dialog_text}}" size="50">
+                    		</td>
+                    	</tr>
+              		{% endfor %}
+                     </tbody>
+              		
+          </table>
+          <button type="button" name="addbutton" onclick='adder()' >add another row</button>
+          <button type="button" name="removebutton" onclick='remover()'>delete last row</button> 
+    <div>
+    <input type="submit" value="Submit" >
+    <p><a href="/update/conversations/">go back to main page</p>
+  </form>
+
+</body>
+</html>

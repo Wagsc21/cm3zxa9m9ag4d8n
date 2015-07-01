@@ -7,7 +7,7 @@
 {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
 <form action='/result/9' method="post">{% csrf_token %}
 <table border="1|0" padding ="10">
-
+<input type="hidden" name="module_number" value={{module_number}}>
 <thead>
    <tr>
       <th>&nbsp;</th>

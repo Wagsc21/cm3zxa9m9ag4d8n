@@ -72,4 +72,12 @@ class Conversationoptiongraph(models.Model):
         
 
 
+class ConversationHistory(models.Model):
+    user=models.ForeignKey(settings.AUTH_USER_MODEL)
+    conversationID=models.ForeignKey(Conversation)
+    history=models.TextField()
+    
+    #----------------------------------------------------------------------
+    def __str__(self):
+        return str(self.user)
         

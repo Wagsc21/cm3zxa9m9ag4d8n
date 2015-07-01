@@ -24,10 +24,10 @@ class ConversationToConversation(models.Model):
     
 class ConversationToModule(models.Model):
     module_number=models.IntegerField()
-    conversation=models.ForeignKey(ExerciseConversation,null=True,related_name='conversation')
+    conversationID=models.ForeignKey(ExerciseConversation,null=True,related_name='conversation')
     correct_technique=models.CharField(max_length=255,null=True)
     
     #----------------------------------------------------------------------
     def __str__(self):
-        return str(self.module_number) +"--"+ str(self.conversation) 
+        return str(self.module_number) +"--"+ str(self.conversationID) 
         

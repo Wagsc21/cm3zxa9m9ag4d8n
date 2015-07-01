@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>this is user history page</title>
+</head>
+<body>
+<form action="" method="post"> {% csrf_token %}
+	<p>this is {{conversationID}}'s history</p>
+	<pre>{{history.history}}</pre>
+</form>
+
+</body>
+</html>

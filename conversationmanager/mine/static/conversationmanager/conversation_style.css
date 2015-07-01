@@ -1,0 +1,16 @@
+
+button{
+	margin: 10px;
+	/*padding: 10px;*/
+}
+
+pre{
+	background-color:#5cb85c;
+	border-color: #5cb85c;
+	color: white;
+}
+
+#choice-text:hover, pre:hover{
+	background-color: #449d44;
+	border-color: #449d44;
+}
