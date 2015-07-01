@@ -1,3 +1,4 @@
+"""
 from django.http import HttpResponseRedirect,HttpResponse
 from django.contrib import auth
 from django.core.context_processors import csrf
@@ -21,7 +22,7 @@ def modulemanager(request):
     else:
         
         technique_list=models.DefaultConversation.objects.filter(module_number=module_number).values('technique').distinct()
-        exercise_list=models.ConversationToModule.objects.filter(module_number=module_number)
+        exercise_list=models.ConversationToModule.objects.filter(module_number=module_number).values('conversationID').distinct()
         data={'technique_list':technique_list,'module_number':module_number,'exercise_list':exercise_list }
         return render(request,'defaultapp/module_main_page.html',data)
 
@@ -68,4 +69,4 @@ def moduletechnique(request):
               'history_eventlistconversations': history_eventlistconversations,
               }
         return render(request,'defaultapp/conversation_page.html',data)
-    
+"""

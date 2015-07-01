@@ -1,3 +1,4 @@
+"""
 from django.db import models
 
 # Create your models here.
@@ -30,4 +31,5 @@ class ConversationToModule(models.Model):
     #----------------------------------------------------------------------
     def __str__(self):
         return str(self.module_number) +"--"+ str(self.conversationID) 
-        
+
+"""

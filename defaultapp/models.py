@@ -1,3 +1,4 @@
+"""
 from django.db import models
 from conversationmanager.models import Conversation
 from cbt2.models import *
@@ -51,3 +52,4 @@ class EventlistConversation(models.Model):
 #----------------------------------------------------------------------
     def __str__(self):
         return str(self.module_number)+" "+self.technique    
+"""

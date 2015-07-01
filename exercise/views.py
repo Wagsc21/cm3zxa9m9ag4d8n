@@ -1,3 +1,4 @@
+"""
 from django.http import HttpResponseRedirect,HttpResponse
 from django.contrib import auth
 from django.core.context_processors import csrf
@@ -32,10 +33,11 @@ def show_exercise(request):
 #----------------------------------------------------------------------
 @login_required(login_url='/accounts/login/')
 def conversation(request):
-    conversation=models.ExerciseConversation.objects.filter(conversationID=request.POST.get('conversationid'))
+    conversation=models.ExerciseConversation.objects.get(conversationID=request.POST.get('conversationid'),conversation_type="Base")
     technique=request.POST.get('technique')
-    correct_techniqu=models.ConversationToModule.objects.filter(conversationID__in=conversation).values_list("correct_technique")
+    correct_techniqu=models.ConversationToModule.objects.filter(conversationID=conversation).values_list("correct_technique" , flat=True)
     correct_techniques=[]
+    #return HttpResponse(correct_techniques)
     correct_techniques.extend(correct_techniqu)
     #return HttpResponse(correct_techniques)
     message=""
@@ -43,14 +45,15 @@ def conversation(request):
         next_conversation=models.ConversationToConversation.objects.get(base_conversation=conversation,technique=technique)
     except models.ConversationToConversation.DoesNotExist:
         message="no such technique"
+        #return HttpResponse(conversation)
         return  render(request,'exercise/conversation.html',{'conversation':conversation,'message':message})
     for correct_technique in correct_techniques:
-        return HttpResponse(correct_techniques)
+        #return HttpResponse(correct_technique+" "+technique)
         if str(correct_technique) == technique:
             message=technique+" Great that worked. You helped the patient identify his/her NAT. see if there is any other technique as well "
             return render(request,'exercise/done.html',{'conversation':conversation, 'next_conversation':next_conversation.technique_conversation,'message':message})
     
-        message="it looks like "+technique+" did not quite help the patient Identify the NAT. Go back and try a different technique. "
+    message="it looks like "+technique+" did not quite help the patient Identify the NAT. Go back and try a different technique. "
     return render(request,'exercise/done.html',{'conversation':conversation, 'next_conversation':next_conversation.technique_conversation,'message':message})
 
 @user_passes_test(lambda u: u.is_superuser)
@@ -63,6 +66,8 @@ def exercise(request):
 @user_passes_test(lambda u: u.is_superuser)
 #----------------------------------------------------------------------
 def add_exercise(request):
+
+"""
     base_conversation=request.POST.get('base_conversation',None)
     last_conversation=models.ExerciseConversation.objects.all().aggregate(Max('conversationID'))['conversationID__max']
     #return HttpResponse("done")
