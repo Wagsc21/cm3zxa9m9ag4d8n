@@ -20,6 +20,7 @@ from django.views.generic import TemplateView
 urlpatterns = [
 
     url(r'^admin/', include(admin.site.urls)),
+
     url(r'^home/','cbt2.views.home'),
     url(r'^welcome/','cbt2.views.welcome'),
     url(r'^fill/details/$','cbt2.views.user_details'),
@@ -35,14 +36,14 @@ urlpatterns = [
     url(r'^anxiety_quiz/submit/$','cbt2.views.set_anxiety_score'),    
     url(r'^depression_quiz/$','cbt2.views.show_depressionquiz'),
     url(r'^anxiety_quiz/$','cbt2.views.show_anxietyquiz'),
-    url(r'^corebeliefs/(?P<num>[0-9]+)$','cbt2.views.show_corebeliefs'),
-    url(r'^intermediatebeliefs/(?P<num>[0-9]+)$','cbt2.views.show_intermediatebeliefs'),
-    url(r'^corebelief/submit/(?P<num>[0-9]+)/$','cbt2.views.set_corebeliefs'),
-    url(r'^intermediatebelief/submit/(?P<num>[0-9]+)/$','cbt2.views.set_intermediatebeliefs'),
-    url(r'^persistentnats/(?P<num>[0-9]+)$','cbt2.views.show_persistentnats'),
-    url(r'^persistentnat/submit/(?P<num>[0-9]+)/$','cbt2.views.set_persistentnats'),
-    url(r'^events/(?P<num>[0-9]+)$','cbt2.views.show_events'),
-    url(r'^event/submit/(?P<num>[0-9]+)/$','cbt2.views.set_events'),
+    #url(r'^corebeliefs/(?P<num>[0-9]+)$','cbt2.views.show_corebeliefs'),
+    #url(r'^intermediatebeliefs/(?P<num>[0-9]+)$','cbt2.views.show_intermediatebeliefs'),
+    #url(r'^corebelief/submit/(?P<num>[0-9]+)/$','cbt2.views.set_corebeliefs'),
+    #url(r'^intermediatebelief/submit/(?P<num>[0-9]+)/$','cbt2.views.set_intermediatebeliefs'),
+    #url(r'^persistentnats/(?P<num>[0-9]+)$','cbt2.views.show_persistentnats'),
+    #url(r'^persistentnat/submit/(?P<num>[0-9]+)/$','cbt2.views.set_persistentnats'),
+    #url(r'^events/(?P<num>[0-9]+)$','cbt2.views.show_events'),
+    #url(r'^event/submit/(?P<num>[0-9]+)/$','cbt2.views.set_events'),
     url(r'^conversation/$','conversationmanager.views.carry_out_conversation'),
     #url(r'^conversation_page/','conversationmanager.views.conversation_page'),
     url(r'^add/conversations/$','conversationmanager.views.conversation'),
@@ -59,6 +60,8 @@ urlpatterns = [
     url(r'^module/$','defaultapp.views.modulemanager'),
     url(r'^technique/$','defaultapp.views.moduletechnique'),
     url(r'^history/$','conversationmanager.views.history'),
-    url(r'^show/history/$','conversationmanager.views.show_history')
+    url(r'^show/history/$','conversationmanager.views.show_history'),
+    url(r'^show_list/$','defaultapp.views.show_list'),
+    url(r'^set_list/$','defaultapp.views.set_list'),
 
 ]

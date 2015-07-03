@@ -83,6 +83,9 @@ $(document).ready(function(){
 	
 	$(document).on('click', '#finish-btn', function (ev) {
 		ev.preventDefault();
+		var dialogHistoryText = $(".bg-danger").text();
+		console.log(dialogHistoryText);
+		saveConversationHistory+=">DP:"+dialogHistoryText+";\n";
 		console.log(saveConversationHistory);
 		confirm("show next conversation");
 		var url = "/history/"

@@ -9,6 +9,13 @@ GENDER_CHOICES=(
     ('other','OTHER'),
 
  )
+LIST_CHOICES=(
+    ('corebelief','Corebelief'),
+    ('intermediatebelief','Intermediatebelief'),
+    ('persistentnat','PersistentNAT'),
+    ("event","Event"),
+
+)
 """
 class Customeuser(models.Model):
     user=models.OneToOneField(settings.AUTH_USER_MODEL)
@@ -107,8 +114,31 @@ class Familymembers(models.Model):
         return str(self.user)
 
 
-# model Corebelief for lsit of corebeliefs
-# custom manager for getting Corebelief instance regarding views/set_list()
+# model Corebelief for list of corebeliefs , intermediatebelief , persistent nat, and event
+
+class BeliefsEventsNats(models.Model):
+    beliefseventsnatsID=models.IntegerField(primary_key=True)
+    beliefseventsnats_text=models.TextField()
+    category=models.CharField(max_length=25,choices=LIST_CHOICES)
+    
+    #----------------------------------------------------------------------
+    def __str__(self):
+        return self.beliefseventsnats_text+"----"+self.category
+
+class UserBeliefsEventsNats(models.Model):
+    user=models.ForeignKey(settings.AUTH_USER_MODEL)
+    beliefs_events_nats=models.ForeignKey(BeliefsEventsNats)
+    
+    #----------------------------------------------------------------------
+    def __str__(self):
+        return str(self.user)
+    
+    class Meta:
+        unique_together=("user","beliefs_events_nats")
+        
+        
+
+"""
 class CustomManagerFOrCorebelief(models.Manager):
     def my_queryset(self,val):
         return self.get(corebeliefID=val)
@@ -251,3 +281,5 @@ class Userevent(models.Model):
 
     def __str__(self):
         return str(self.user)
+
+"""

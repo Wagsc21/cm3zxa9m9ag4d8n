@@ -57,7 +57,7 @@
 
 </head>
 <body>
-<p>Last conversation ID : {{last_conversation}}</p>
+<!-- <p>Last conversation ID : {{last_conversation}}</p> -->
   <form action="done/" method="post" onsubmit="return row_validation()" id="exerciseform">{% csrf_token %}
     <textarea style="overflow:auto" rows="10" cols="50" name="base_conversation" required></textarea>
     <br>
@@ -69,6 +69,7 @@
     <button type="button" onclick="deleteTechnique()">delete technique</button>
   
     <input type="submit" value="Submit" >
+    <p><a href="/admin_page/">go to main page</a></p>
   </form>
 
 </body>

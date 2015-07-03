@@ -1,11 +1,23 @@
 I made a silly mistake in my exam..
 I got a poor grade in my exam.
-My father said that he expected better results from me.
+My father said that he expected better results form me.
 I missed a class again in a course in which I have very poor attendance.
 Not properly prepared for the exam tomorrow.
 Not getting an internship position/job.
-My peers are way smarter than me.
-Having difficulty with a concept/experiment/language/subject.
+I think my peers are way smarter than me.
+Having difficulty with a concept/experiment/subject.
+Research is not going well.
+Paper got rejected.
+Viciously screamed at by guide.
+Ignored/belittled by guide.
+Didn’t finish a task in time.
+Worried about thesis completion.
+Worried about post PhD/M.Tech plans.
+I no longer like my research area.
+Having difficulty with guide.
+Friends going abroad.
+Friends getting married.
+Friends in industry getting promotions.
 Praise from a professor/peer.
 Got an above average grade/marks in a course/quiz.
 Failed a test that is very important to me.
@@ -29,30 +41,19 @@ Socializing too less.
 Spending more time on the virtual life than real life (Facebook etc.).
 Spending too much time worrying about future.
 Doing no physical exercise at all.
-Research is not going well.
-Paper got rejected.
-Viciously screamed at by guide.
-Ignored/belittled by guide.
-Didn’t finish a task in time.
-Worried about thesis completion.
-Worried about post PhD/M.Tech plans.
-I no longer like my research area.
-Having difficulty with guide.
-Friends going abroad.
-Friends getting married.
-Friends in industry getting promotions.
 Sudden shift in mood.
+After I start doing an assignment, if I get stuck somewhere, I give up immediately and feel very stupid.
 Asked for help regarding an assignment.
 Was asked how college is going?
 Saw a pretty girl at CCD.
 Stammered while talking in public.
 Surprise quiz was announced.
-Eating in the canteen very often/eating junk food very often.
+Eating in the canteen very often/ Eating junk food very often.
 Went to send a mail, forgot to take the address with me.
 Made a fool of myself in a social situation.
 Having sleep problems, waking up in the early morning or having restless sleep or having trouble falling asleep.
 Had a fight with boyfriend/girlfriend. Had a breakup with boyfriend/girlfriend.
-Anxiety provoking situations (interpersonal)
+Said “Hi” to a girl/boy in Facebook, she/he didn’t reply.
 Initiating a date or appointment with someone
 Being introduced to unfamiliar person
 Attending a party or social gathering 
@@ -67,8 +68,7 @@ Returning a purchased item
 Making eye contact 
 Expressing dissatisfaction with restaurant food 
 Talking to authority figure
-Anxiety provoking situations (performance)
-Making a toast or speech 
+Making a speech 
 Speaking in meetings 
 Playing sports in front of an audience 
 Participating in a wedding party or public ceremony 
@@ -81,3 +81,4 @@ Walking/running in busy public place
 Introducing yourself to others 
 Shopping in a busy store 
 Walking in front of a large group of people
+I said “Hi” to an old friend in Facebook, he/she didn’t reply

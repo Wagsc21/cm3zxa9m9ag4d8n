@@ -4,6 +4,7 @@
 		<title>this is a demo conversation</title>
 	</head>
 	<body>
+	
 		<form action="/exercise/conversation/" method="post"> {% csrf_token %}
 		<input type="hidden" name="conversationid" value="{{conversation.conversationID}}">
 			<strong>{{conversation.conversation_text| linebreaks }}</strong>

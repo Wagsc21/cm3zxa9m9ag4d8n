@@ -1,3 +1,4 @@
+
 from django.http import HttpResponseRedirect,HttpResponse
 from django.contrib import auth
 from django.core.context_processors import csrf
@@ -16,13 +17,12 @@ from . import models
 from django.contrib.auth.decorators import user_passes_test
 from django.db.models import Q , Max
 # Create your views here.
-#"""
+
 
  # function for carrying out the conversation with conversation id as only input
 @login_required(login_url='/accounts/login/')
 def carry_out_conversation(request):
-    username=request.session['username']
-    user=User.objects.get(username=username)  
+    user=request.user
         
     if not request.POST.get('dialog',None) == None:
         
@@ -55,7 +55,7 @@ def carry_out_conversation(request):
             #models.Userconversation.objects.create(user=user,conversation=fullconversationset[0],option_selected=qset[0].option,conversation_time=datetime.now())
             return render(request,'conversationmanager/conversation.html',{'option_list': option_list,'dialog':fullconversationset[0],'conversationID':request.session['conversationID']})
         except(KeyError):
-            return HttpResponseRedirect('/conversation_page/')
+            return HttpResponseRedirect('/welcome/')
 
     
 #def conversation_page(request):
@@ -185,4 +185,3 @@ def show_history(request):
         return HttpResponse("NO history")
     #return HttpResponse('error')
    
-    

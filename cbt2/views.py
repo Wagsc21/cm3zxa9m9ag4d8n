@@ -1,4 +1,4 @@
-#"""
+
 from django.http import HttpResponseRedirect,HttpResponse
 from django.contrib import auth
 from django.core.context_processors import csrf
@@ -112,7 +112,9 @@ def invalid_login(request):
 
 def logout(request):
     auth.logout(request)
-    return render(request,'cbt2/logout.html')
+    response=redirect('cbt2.views.login')
+    
+    return response
 
 
 # function for recording and handelling froms.userdetails form
@@ -136,7 +138,7 @@ def user_details(request):
             args.update(csrf(request))
             return HttpResponseRedirect('/fill/family_details/')
     return render(request,'cbt2/userinfo.html',{'form': form})
-    #"""
+    
 
 
 # function for recording and handelling forms.familydetails form
@@ -225,6 +227,7 @@ def set_anxiety_score(request):
         
     
 #function to show any of list given in argument
+"""
 @login_required(login_url='/accounts/login/')
 def show_list(request,sender,reciever,num,list_size):
     try:
@@ -286,7 +289,7 @@ def set_persistentnats(request,num):
 @login_required(login_url='/accounts/login/')
 def set_events(request,num):
     return set_list(request,to_set=models.Userevent,sender=models.Eventlist,reciever='events',num=num,list_size=event_list_size)
-
+"""
 @login_required(login_url='/accounts/login/')
 def show_depressionquiz(request):
     module_number=request.POST.get('module_number',None)
@@ -345,5 +348,5 @@ def show_anxietyquiz(request):
         return render(request,'cbt2/anxiety_assesment_questionnaire.html',{'module_number':module_number})
     return HttpResponseRedirect('/module/')
     
-        
+       
    
