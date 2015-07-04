@@ -2,6 +2,7 @@
 from django.db import models
 from defaultapp.models import Technique
 # Create your models here.
+from django.conf import settings
 class ExerciseConversation(models.Model):
     conversationID=models.IntegerField(primary_key=True)
     conversation_text=models.TextField()
@@ -35,3 +36,37 @@ class ConversationToModule(models.Model):
     def __str__(self):
         return str(self.module_number) +"--"+ str(self.conversationID) 
 
+class IdentifyNat(models.Model):
+    user=models.ForeignKey(settings.AUTH_USER_MODEL)
+    situation=models.TextField()
+    technique=models.TextField()
+    nat=models.TextField()
+    
+    #----------------------------------------------------------------------
+    def __str__(self):
+        return str(self.user)
+        
+    
+class ChallengeNat(models.Model):
+    user=models.ForeignKey(settings.AUTH_USER_MODEL)
+    situation=models.TextField()
+    nat=models.TextField()
+    technique=models.TextField()
+    resolution=models.TextField()
+    
+    #----------------------------------------------------------------------
+    def __str__(self):
+        return str(self.user)
+        
+    
+class ModifyingBelief(models.Model):
+    user=models.ForeignKey(settings.AUTH_USER_MODEL)
+    description=models.TextField()
+    belief=models.TextField()
+    technique_used=models.TextField()
+    adaptive_belief=models.TextField()
+    
+    #----------------------------------------------------------------------
+    def __str__(self):
+        return str(self.user)        
+    

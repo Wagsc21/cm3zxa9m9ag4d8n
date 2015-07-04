@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Identify Nat form</title>
+</head>
+<body>
+<form action="/identifyNAT/" method="post"> {% csrf_token %}
+	{{form}}
+	<input type="submit" value="submit">
+</form>
+
+</body>
+</html>

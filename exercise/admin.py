@@ -5,3 +5,6 @@ from .models import *
 admin.site.register(ExerciseConversation)
 admin.site.register(ConversationToConversation)
 admin.site.register(ConversationToModule)
+admin.site.register(IdentifyNat)
+admin.site.register(ChallengeNat)
+admin.site.register(ModifyingBelief)

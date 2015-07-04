@@ -299,24 +299,24 @@ def show_depressionquiz(request):
         return HttpResponseRedirect('/welcome/')
     request.session['module_number']=module_number
     user_test=models.Test.objects.get(user=user)
-    #return HttpResponse(test.dsasweek1)
+    #return HttpResponse(not user_test.dsasweek1 )
     if module_number == '1':
-        if user_test.dsasweek1 == '':
+        if not user_test.dsasweek1 :
             return render(request,'cbt2/depression_assessment_questionnaire.html',{'module_number':module_number})
     elif module_number == '2':
-        if user_test.dsasweek2 == '':
+        if not user_test.dsasweek2 :
             return render(request,'cbt2/depression_assessment_questionnaire.html',{'module_number':module_number})
     elif module_number == '3':
-        if user_test.dsasweek3 =='':
+        if not user_test.dsasweek3 :
             return render(request,'cbt2/depression_assessment_questionnaire.html',{'module_number':module_number})
     elif module_number == '4':
-        if user_test.dsasweek4 =='':
+        if not user_test.dsasweek4 :
             return render(request,'cbt2/depression_assessment_questionnaire.html',{'module_number':module_number})
     elif module_number == '5':
-        if user_test.dsasweek5 =='':
+        if not user_test.dsasweek5:
             return render(request,'cbt2/depression_assessment_questionnaire.html',{'module_number':module_number})
     elif module_number == '6':
-        if user_test.dsasweek6 =='':
+        if not user_test.dsasweek6 :
             return render(request,'cbt2/depression_assessment_questionnaire.html',{'module_number':module_number})
     else:
         return render(request,'cbt2/depression_assessment_questionnaire.html',{'module_number':module_number})
@@ -327,22 +327,22 @@ def show_anxietyquiz(request):
     user=request.user
     user_test=models.Test.objects.get(user=user)
     if module_number == '1':
-        if user_test.asweek1 == '':
+        if not user_test.asweek1:
             return render(request,'cbt2/anxiety_assesment_questionnaire.html',{'module_number':module_number})
     elif module_number == '2':
-        if user_test.asweek2 == '':
+        if not user_test.asweek2 :
             return render(request,'cbt2/anxiety_assesment_questionnaire.html',{'module_number':module_number})
     elif module_number == '3':
-        if user_test.asweek3 =='':
+        if not user_test.asweek3:
             return render(request,'cbt2/anxiety_assesment_questionnaire.html',{'module_number':module_number})
     elif module_number == '4':
-        if user_test.asweek4 =='':
+        if not user_test.asweek4 =='':
             return render(request,'cbt2/anxiety_assesment_questionnaire.html',{'module_number':module_number})
     elif module_number == '5':
-        if user_test.asweek5 =='':
+        if not user_test.asweek5 :
             return render(request,'cbt2/anxiety_assesment_questionnaire.html',{'module_number':module_number})
     elif module_number == '6':
-        if user_test.asweek6 =='':
+        if not user_test.asweek6 :
             return render(request,'cbt2/anxiety_assesment_questionnaire.html',{'module_number':module_number})
     else:
         return render(request,'cbt2/anxiety_assesment_questionnaire.html',{'module_number':module_number})

@@ -12,7 +12,7 @@ from datetime import datetime
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
-from . import models
+from . import models , forms
 from django.contrib.auth.decorators import user_passes_test
 from django.db.models import Q , Max
 
@@ -88,3 +88,41 @@ def add_exercise(request):
         return render(request, "exercise/added.html",{'base':base})
     else:
         return HttpResponse("not done")
+
+@login_required(login_url='/accounts/login/')
+#----------------------------------------------------------------------
+def identify_nat(request):
+    if request.method == 'GET':
+        form=forms.Identifynatform()
+    else:
+        form=forms.Identifynatform(request.POST)
+        if form.is_valid():
+            form.save(request)
+            return HttpResponse("done")
+    return render(request,'exercise/identifynatform.html',{'form':form})
+        
+@login_required(login_url='/accounts/login/')
+#----------------------------------------------------------------------
+def challenge_nat(request):
+    if request.method == 'GET':
+        form=forms.Challengenatform()
+    else:
+        form=forms.Challengenatform(request.POST)
+        if form.is_valid():
+            form.save(request)
+            return HttpResponse('done')
+    return render(request,'exercise/challengenatform.html',{'form':form})
+
+@login_required(login_url='/accounts/login/')
+#----------------------------------------------------------------------
+@login_required(login_url='/accounts/login/')
+def modifybeliefs(request):
+    if request.method == 'GET':
+        form=forms.Modifyingbeliefform()
+    else:
+        form=forms.Modifyingbeliefform(request.POST)
+        if form.is_valid():
+            form.save(request)
+            return HttpResponse('done')
+    return render(request,'exercise/modifybeliefsform.html',{'form':form})
+    
