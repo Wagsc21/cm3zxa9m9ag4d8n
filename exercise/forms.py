@@ -1,4 +1,5 @@
-from .models import *
+
+"""from .models import *
 from django.forms import ModelForm
 
 
@@ -41,6 +42,6 @@ class Modifyingbeliefform(ModelForm):
         if commit:
             userform.save()
             return userform
-        
+"""    
         
         

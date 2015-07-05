@@ -35,7 +35,7 @@ class ConversationToModule(models.Model):
     #----------------------------------------------------------------------
     def __str__(self):
         return str(self.module_number) +"--"+ str(self.conversationID) 
-
+"""
 class IdentifyNat(models.Model):
     user=models.ForeignKey(settings.AUTH_USER_MODEL)
     situation=models.TextField()
@@ -69,4 +69,4 @@ class ModifyingBelief(models.Model):
     #----------------------------------------------------------------------
     def __str__(self):
         return str(self.user)        
-    
+ """  

@@ -5,7 +5,6 @@ from django.core.context_processors import csrf
 from django.shortcuts import render,render_to_response , get_object_or_404 , get_list_or_404
 from django.http import HttpResponse, HttpResponseRedirect 
 from django.core.urlresolvers import reverse
-#from .forms import * 
 from django.core import serializers
 from django.views.decorators.cache import cache_control
 from datetime import datetime
@@ -89,6 +88,7 @@ def add_exercise(request):
     else:
         return HttpResponse("not done")
 
+"""
 @login_required(login_url='/accounts/login/')
 #----------------------------------------------------------------------
 def identify_nat(request):
@@ -126,3 +126,4 @@ def modifybeliefs(request):
             return HttpResponse('done')
     return render(request,'exercise/modifybeliefsform.html',{'form':form})
     
+"""

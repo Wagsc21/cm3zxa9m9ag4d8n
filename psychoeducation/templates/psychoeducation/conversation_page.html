@@ -1,0 +1,30 @@
+<doctype!>
+<html>
+	<head>
+		<title> this is conversation page</title>
+	</head>
+	<body>
+		<form action="/conversation/" method="post">{% csrf_token %}
+		<p>Hi! {{user}}</p>
+		{%  for conversation in defaultconversations  %}
+		<input type="submit" name="conversationID" value="{{conversation.conversationID}}">
+		
+		{% endfor %}
+		{%  for conversation in specificonversations  %}
+		<input type="submit" name="conversationID" value="{{conversation}}">
+		
+		{% endfor %}
+		</form>
+		<p>history</p>
+		<form action="/show/history/" method="post" >{% csrf_token %}  
+			{% for history in defaulthistories %}
+			<input type="submit" name="conversationID" value="{{history.conversationID}}">
+			{% endfor %}
+			{% for history in specifichistories %}
+			<input type="submit" name="conversationID" value="{{history.conversationID}}">
+			{% endfor %}
+		</form>
+		
+		
+	</body>
+</html>

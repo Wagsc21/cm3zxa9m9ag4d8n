@@ -42,6 +42,12 @@ INSTALLED_APPS = (
     'conversationmanager',
     'exercise',
     'defaultapp',
+    'psychoeducation',
+    'behavioralactivation',
+    'identifynat',
+    'challengenat',
+    'modifybelief',
+    'relapseprevention',
 )
 
 MIDDLEWARE_CLASSES = (

@@ -31,7 +31,7 @@ class Dialogs(models.Model):
     conversationID=models.ForeignKey(Conversation)
     dialog=models.IntegerField('dialog ID',primary_key=True)
     dialog_text=models.TextField()
-    user_conversation=models.ManyToManyField(settings.AUTH_USER_MODEL,through='Userconversation')
+    #user_conversation=models.ManyToManyField(settings.AUTH_USER_MODEL,through='Userconversation')
     option=models.ManyToManyField(Options,through='Conversationoptiongraph',through_fields=('current_dialog','option'))
     
     objects=models.Manager()
@@ -43,7 +43,7 @@ class Dialogs(models.Model):
         ordering=['dialog']
 
 
-
+"""
 # intermediate model between Users model and Conversation model
 # purpose is to store conversation history
 class Userconversation(models.Model):
@@ -57,7 +57,7 @@ class Userconversation(models.Model):
     class Meta:
         ordering=['-conversation_time','user']
 
-
+"""
 
 # intermediate model between Conversations model and Options model
 class Conversationoptiongraph(models.Model):

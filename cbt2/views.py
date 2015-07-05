@@ -223,7 +223,21 @@ def set_anxiety_score(request):
     elif module_number == '7':
         user_test.asweek7=score
     user_test.save()
-    return HttpResponseRedirect("/module/")
+    #return HttpResponseRedirect("/module/")
+    if module_number == '1':
+        return HttpResponseRedirect('/Psychoeducation about Depression and CBT/')
+    elif module_number == '2':
+        return HttpResponseRedirect('/Behavioral Activation/')
+    elif module_number == '3':
+        return HttpResponseRedirect('/Identifying NATs/')
+    elif module_number == '4':
+        return HttpResponseRedirect('/Challenging NATs/')
+    elif module_number == '5':
+        return HttpResponseRedirect('/Modifying Intermediate and Core Beliefs/')
+    elif module_number == '6':
+        return HttpResponseRedirect('/Relapse Prevention/')
+    else:
+        return HttpResponseRedirect('/welcome/')    
         
     
 #function to show any of list given in argument
@@ -336,7 +350,7 @@ def show_anxietyquiz(request):
         if not user_test.asweek3:
             return render(request,'cbt2/anxiety_assesment_questionnaire.html',{'module_number':module_number})
     elif module_number == '4':
-        if not user_test.asweek4 =='':
+        if not user_test.asweek4 :
             return render(request,'cbt2/anxiety_assesment_questionnaire.html',{'module_number':module_number})
     elif module_number == '5':
         if not user_test.asweek5 :
@@ -344,9 +358,22 @@ def show_anxietyquiz(request):
     elif module_number == '6':
         if not user_test.asweek6 :
             return render(request,'cbt2/anxiety_assesment_questionnaire.html',{'module_number':module_number})
-    else:
+    elif module_number == '7':
         return render(request,'cbt2/anxiety_assesment_questionnaire.html',{'module_number':module_number})
-    return HttpResponseRedirect('/module/')
+    if module_number == '1':
+        return HttpResponseRedirect('/Psychoeducation about Depression and CBT/')
+    elif module_number == '2':
+        return HttpResponseRedirect('/Behavioral Activation/')
+    elif module_number == '3':
+        return HttpResponseRedirect('/Identifying NATs/')
+    elif module_number == '4':
+        return HttpResponseRedirect('/Challenging NATs/')
+    elif module_number == '5':
+        return HttpResponseRedirect('/Modifying Intermediate and Core Beliefs/')
+    elif module_number == '6':
+        return HttpResponseRedirect('/Relapse Prevention/')
+    else:
+        return HttpResponseRedirect('/welcome/')
     
        
    

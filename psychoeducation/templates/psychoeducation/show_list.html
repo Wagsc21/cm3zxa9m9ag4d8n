@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Questionnaire list</title>
+</head>
+<body>
+		<form action="/Psychoeducation about Depression and CBT/set_list/" method="post">{% csrf_token %}
+		<ol>
+			{%  for elements in list_to_show %}
+			<li><p><label><input type="checkbox" name="elements{{forloop.counter}}" value="{{elements.beliefseventsnats.beliefseventsnatsID}}">{{elements.beliefseventsnats.beliefseventsnats_text}}</label></p>	</li>
+			{% endfor %}
+			</ol>
+			<input type="hidden" name="list_length" value="{{list_to_show.count}}">
+			<input type="hidden" name="technique" value="{{technique.technique_id}}">
+			<input type="submit" value="submit">
+		</form>
+</body>
+</html>

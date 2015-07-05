@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>this is module {{module_number}} main page</title>
+</head>
+<body>
+<form action="show_list/" method="post">{% csrf_token %}
+<p>Techniques</p>
+	<input type="hidden" name="module_number" value={{module_number}}>
+	{% for technique in technique_list %}
+		<input type="submit" name="technique" value="{{technique.technique_id}}">
+	{% endfor %}
+</form>
+<form action="/exercise/" method="post">{% csrf_token %}
+	<p>Exercises</p>
+	<br><br>
+	<input type="hidden" name="module_number" value={{module_number}}>
+	{%  for exercise in exercise_list  %}
+		<input type="submit" name="conversationid" value="{{exercise.conversationID}}">
+		{% endfor %}
+</form>
+
+
+</body>
+</html>

@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Exercise</title>
+	{% load staticfiles %}
+	<title></title>
+	<link rel="stylesheet" href="{% static 'exercise/bootstrap/css/bootstrap.min.css' %}">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.js"></script>
+	<script src="http://code.jquery.com/ui/1.11.0/jquery-ui.js"></script>
+	<link rel="stylesheet" href="http://code.jquery.com/ui/1.10.4/themes/redmond/jquery-ui.css">
+	<script type="text/javascript" src="{% static 'exercise/bootstrap/js/bootstrap.min.js' %}"></script>
+	<script type="text/javascript" src="{% static 'exercise/jquery.cookie.js' %}"></script>
+	<script type="text/javascript" src="{% static 'exercise/exercise_conversation_javascript.js' %}"></script>
+	<link rel="stylesheet" type="text/css" href="{% static 'exercise/exercise_conversation_style.css' %}">
+</head>
+<body>
+	<div class="container">
+		<div class="row">
+			<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+			<!-- Here set the message for a user according to the specific module number being sent by the backend -->
+				<input name="module-specific-message" value="{{module_number}}" type="hidden"></input>
+				<blockquote>
+					<h4><p class="module-specific-message bg-success"></p></h4>
+				</blockquote>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 bg-warning">
+				<blockquote>
+					<p>{{conversation.conversation_text| linebreaks}}</p>
+				</blockquote>
+			</div>
+		</div>
+		<div class="row technique-input-row">
+			<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 ">
+				<form action="/exercise/conversation/" method="post" id="exercise-form" class="form-inline"> {% csrf_token %}
+					<input type="hidden" name="conversationid" value="{{conversation.conversationID}}">
+					<input type="text" name="technique" class="form-control ui-widget" placeholder="Input technique name here" required>
+					<input type="submit" value="Submit" name="submit-button">
+				</form>
+			</div>
+		</div>
+		<div class="row">
+			<div class="to-be-replaced">
+				<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 result">
+					<blockquote>
+						<p id="result-conversation">{{next_conversation.conversation_text| linebreaks }}</p>
+					</blockquote>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

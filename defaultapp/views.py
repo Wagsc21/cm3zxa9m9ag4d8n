@@ -60,7 +60,7 @@ def moduletechnique(request):
         except KeyError:
             return HttpResponseRedirect('/welcome/')
         #module_number=request.POST.get('module_number')
-        
+"""
 @login_required(login_url='/accounts/login/')
 #----------------------------------------------------------------------
 def show_list(request):
@@ -91,4 +91,4 @@ def set_list(request):
     response=HttpResponse(is_list_shown.status)
     
     return response
-    
+"""
