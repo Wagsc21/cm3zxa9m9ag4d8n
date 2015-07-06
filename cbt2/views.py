@@ -1,4 +1,6 @@
-
+###########################################
+# importing neccessary class and modules 
+###########################################
 from django.http import HttpResponseRedirect,HttpResponse
 from django.contrib import auth
 from django.core.context_processors import csrf
@@ -13,10 +15,10 @@ from datetime import datetime
 from . import models , forms
 from django.contrib.auth.decorators import login_required
 from django.conf import settings
-corebelief_list_size=11
-intermediatebelief_list_size=15
-persistentnat_list_size=16
-event_list_size=15
+"""
+depression assessment quiz question list
+NOT USED ANYWHERE YET
+"""
 depression_list=[
     'Have you found little pleasure or interest in doing things?',
     'Have you found yourself feeling down, depressed or hopeless?',
@@ -27,10 +29,14 @@ depression_list=[
     'Have you had trouble concentrating or thinking or feeling very indecisive?',
     'Have you been moving slowly or speaking slowly or been very agitated so that others are able to notice?',
     'Have you been having suicidal thoughts with or without a specific plan or have you been hurting yourself in some way?', 
-
-
 ]
-
+"""
+anxiety assessment quiz question list
+NOT USED ANYWHERE YET
+"""
+"""
+NOTE:- EVERY VIEW WITH @login_required(login_url='/accounts/login/') DECORATOR WILL ONLY BE ACCESSED IF ONLY AFTER A USER LOGIN
+"""
 anxiety_list=[
     'Feeling nervous, anxious or on edge',
     'Not being able to stop or control worrying',
@@ -39,17 +45,21 @@ anxiety_list=[
     'Being so restless that it is hard to sit still',
     'Becoming easily annoyed or irritable',
     'Feeling afraid as if something awful might happen',
-
 ]
-#function to generate random string [not used yet]
+#function to generate random string [NOT USED YET]
 def random_uid():
     unique_id=get_random_string(length=25)
     return unique_id
 
 
 # renders request to home page
+#----------------------------------------------------------------------
 def home(request):
     return render(request,'cbt2/home.html')
+
+"""
+this is a view to render welcome page. the page will only be rendered if the user completes his profile first.
+"""
 #----------------------------------------------------------------------
 @login_required(login_url='/accounts/login/')
 def welcome(request):
@@ -58,7 +68,14 @@ def welcome(request):
         return render(request,'cbt2/welcome.html')
     else:
         return HttpResponseRedirect('/fill/details/')
-
+#----------------------------------------------------------------------
+"""
+this is view that is used for user sign up purpose it uses signupform ('cbt2/forms.py').
+initailly we check if the method in request is POST or not if it is POST we pass the post data in our signupform (function call forms.signupform(request.POST))
+if method is GET we simply return  the empty form
+for post method we check if form is valid and if it is we save the form to create user
+after the user is created we create a test boject for the user to keep his depression and anxiety score
+"""
 def usersignup(request):
     if request.method =='GET':
         form=forms.signupform()
@@ -73,18 +90,25 @@ def usersignup(request):
             args = {}
             args.update(csrf(request))
             return HttpResponseRedirect('/accounts/login/')
-            
-                
-            
     return render(request,'cbt2/usersignup.html',{'form':form})
 
-# login function for authentication
+#----------------------------------------------------------------------
+"""
+this view simply render the login page
+"""
 def login(request):
     c = {}
     c.update(csrf(request))
     return render(request,'cbt2/login.html') 
+#----------------------------------------------------------------------
+"""
+this view read the post method data: username and password and call the auth.authenticate(username=username, password=password)
+this function call return an object of setting.AUTH_USER_MODEL if the given credential are correct for registered user
+then if the user is a superuser, user is directed to admin_page by returning HttpResponseRedirect('/admin_page/')
+and a regualr user is directed to '/welcom/' page by returning HttpResponseRedirect('/welcome/')
+if the credential are false the user is shown invalid user page
 
-# function where actually username and password is authenticated
+"""
 def auth_view(request):
     username = request.POST.get('username','')
     password = request.POST.get('password','')
@@ -95,29 +119,33 @@ def auth_view(request):
         request.session['username']=user.get_username()
         if user.is_superuser:
             return HttpResponseRedirect('/admin_page/')
-        if request.POST.get('next'):
-            return HttpResponseRedirect(request.POST.get('next'))
-        else:
-            return HttpResponseRedirect('/welcome/')
+        return HttpResponseRedirect('/welcome/')
     else:
         return HttpResponseRedirect('/accounts/invalid')
 
-# function that will handel all request after logging in also prevent browser caching of log in page once logout
+#----------------------------------------------------------------------
+"""
+this is a view to redirect the user to once he is logged in
+"""
 def loggedin(request):
     if(request.GET['next']==None):
         return HttpResponseRedirect('/home/')
     else:
         return HttpResponseRedirect(request.GET['next'])
-
-# action in case of invalid login details
+    
+#----------------------------------------------------------------------
+"""
+if the credentials are incorrect then the user is rendered a page showing incorrect credentials 
+"""
 def invalid_login(request):
     return render(request,'cbt2/invalid_login.html')
 
+#----------------------------------------------------------------------
+"""
+this view logs out the user also delete the cache history so that user can't log back in just by pressing back button in browser
+"""
 @cache_control(no_cache=True, must_revalidate=True)
-
-
 # function that log out user
-
 def logout(request):
     auth.logout(request)
     response=redirect('cbt2.views.login')
@@ -125,23 +153,30 @@ def logout(request):
     return response
 
 
-# function for recording and handelling froms.userdetails form
-#@login_required(login_url='/accounts/login')
+#----------------------------------------------------------------------
+"""
+this function uses userdetails form and pass the filled fields if the request is post otherwise renders the same form
+also if the form is valid it create (not exists already and if exists it will update it ) a user profile for the user 
+"""
+@login_required(login_url='/accounts/login')
 def user_details(request):
     if request.method == 'GET':
         form=userdetails()
     else:
         form=userdetails(request.POST)
         if form.is_valid():
-            username=request.session['username']
-            user=User.objects.get(username=username)
+            user=request.user
             age=form.cleaned_data['agegroup']
             edu=form.cleaned_data['education']
             country=form.cleaned_data['country']
             occu=form.cleaned_data['enrolled_as']
             gen=form.cleaned_data['gender']
             phno=form.cleaned_data['ph']
-            done=models.Customuserprofile.objects.create(user=user,agegroup=age,education=edu,country=country,enrolled_as =occu,gender=gen,phonenumber=phno)
+            done=models.Customuserprofile.objects.filter(user=user)
+            if done.exists():
+                done.update(agegroup=age,education=edu,country=country,enrolled_as =occu,gender=gen,phonenumber=phno)
+            else:
+                models.Customuserprofile.objects.create(user=user,agegroup=age,education=edu,country=country,enrolled_as =occu,gender=gen,phonenumber=phno)
             args ={}
             args.update(csrf(request))
             return HttpResponseRedirect('/fill/family_details/')
@@ -149,7 +184,11 @@ def user_details(request):
     
 
 
-# function for recording and handelling forms.familydetails form
+#----------------------------------------------------------------------
+"""
+this view uses familydetails form and pass the filled fields if the request is post otherwise renders the same form
+also if the form is valid it create if(not exists already and if exists it will update it ) a user's family member profile for the user by exeuting create query
+"""
 @login_required(login_url='/accounts/login/')
 def family_details(request):
     if request.method == 'GET':
@@ -157,21 +196,28 @@ def family_details(request):
     else:
         form=familydetails(request.POST)
         if form.is_valid():
-            username=request.session['username']
-            user=User.objects.get(username=username)
+            user=request.user
             #request.session['userid']=user
             mname=form.cleaned_data['member_name']
             eid=form.cleaned_data['emailid']
             phno=form.cleaned_data['ph']
             rtou=form.cleaned_data['relate']
             #invoid=form.cleaned_data['involvementid']
-            done=models.Familymembers.objects.create(user=user,member_name=mname,emailid=eid,phonenumber=phno,relate=rtou)
+            done=models.Familymembers.objects.filter(user=user)
+            if done.exists():
+                done.update(member_name=mname,emailid=eid,phonenumber=phno,relate=rtou)
+            else:
+                models.Familymembers.objects.create(user=user,member_name=mname,emailid=eid,phonenumber=phno,relate=rtou)
             args = {}
             args.update(csrf(request))
             return HttpResponseRedirect("/user/setting/")
     return render(request,'cbt2/userfamilyinfo.html',{'form': form})
 
-# function for taking involvement extent of user family 
+#----------------------------------------------------------------------
+"""
+this view renders a form for taking user's familymember's involvement 
+if user tries to fill this before registering a member he/she will be directed to first fill the family member detail
+"""
 @login_required(login_url='/accounts/login/')
 def settings(request):
     if request.method == 'GET':
@@ -179,14 +225,20 @@ def settings(request):
     else:
         form=involvement(request.POST)
         if form.is_valid():
-            username=request.session['username']
-            user=User.objects.get(username=username)
+            user=request.user
             invo=form.cleaned_data['involvement']
-            models.Familymembers.objects.filter(user=user).update(involvementid=invo)
+            try :
+                models.Familymembers.objects.get(user=user).update(involvementid=invo)
+            except models.Familymembers.DoesNotExist:
+                return HttpResponseRedirect('/fill/family_details/')
             return HttpResponseRedirect('/depression_quiz/')
     return render(request,'cbt2/setting.html',{'form':form})
 
-#function for recording and handelling user's depression and anxiety quiz
+#----------------------------------------------------------------------
+"""
+this view is used for setting depression assessment score of the user as per module/week.
+if the depression score is already set for the module he/she will be directed to anxiety assessment quiz
+"""
 @login_required(login_url='/accounts/login/')
 def set_depression_score(request):
     user=request.user
@@ -210,6 +262,11 @@ def set_depression_score(request):
     user_test.save()
     return HttpResponseRedirect("/anxiety_quiz/")
 
+#----------------------------------------------------------------------
+"""
+this view is used for setting anxiety assessment score of the user as per module/week.
+if the anxiety score is already set for the module he/she will be directed to module main page
+"""
 @login_required(login_url='/accounts/login/')
 def set_anxiety_score(request):
     user=request.user
@@ -248,69 +305,9 @@ def set_anxiety_score(request):
         return HttpResponseRedirect('/welcome/')    
         
     
-#function to show any of list given in argument
+#----------------------------------------------------------------------
 """
-@login_required(login_url='/accounts/login/')
-def show_list(request,sender,reciever,num,list_size):
-    try:
-        x=list_size*(int(num)-1)
-        list=sender.objects.all()[x:x+list_size]
-        return render(request,'cbt2/%s.html' %reciever,{'%ss_list' %reciever : list,'num':num})
-    except(KeyError):
-        return HttpResponse('<html><body>error </body></html>')
-
-#function for recording the choosen options of show list function
-@login_required(login_url='/accounts/login/')
-def set_list(request,to_set,sender,reciever,num,list_size):
-    try:
-        username=request.session['username']
-        user=User.objects.get(username=username)
-        x=list_size*(int(num)-1)
-        for i in range(x,x+list_size):
-            if not request.POST.get('optionID%d' % (i+1),None) == None:
-                r=sender.filtered_objects.my_queryset(i+1)
-                to_set.filtered_objects.customcreate(user,r)
-        #return HttpResponse(r)
-        return HttpResponseRedirect('/%s/%s' %(reciever,num))
-    except KeyError as e:
-        return HttpResponse('error'+str(e))
-
-
-@login_required(login_url='/accounts/login/')
-def set_corebeliefs(request,num):
-    return set_list(request,to_set=models.Userscb,sender=models.Corebelief,reciever='intermediatebeliefs',num=num,list_size=corebelief_list_size)
-
-@login_required(login_url='/accounts/login/')
-def show_corebeliefs(request,num):
-    global corebelief_list_size
-    return show_list(request,sender=models.Corebelief,reciever='corebelief',num=num,list_size = corebelief_list_size)
-
-
-def show_intermediatebeliefs(request,num):
-    global intermediatebelief_list_size
-    return show_list(request,sender=models.Intermediatebelief,reciever='intermediatebelief',num=num,list_size = intermediatebelief_list_size)
-
-@login_required(login_url='/accounts/login/')
-def show_persistentnats(request,num):
-    global persistentnat_list_size
-    return show_list(request,sender=models.Persistentnat,reciever='persistentnat',num=num,list_size = persistentnat_list_size)
-
-@login_required(login_url='/accounts/login/')
-def show_events(request,num):
-    global event_list_size
-    return show_list(request,sender=models.Eventlist,reciever='event',num=num,list_size=event_list_size)
-
-@login_required(login_url='/accounts/login/')
-def set_intermediatebeliefs(request,num):
-    return set_list(request,to_set=models.Usersib,sender=models.Intermediatebelief,reciever='persistentnats',num=num,list_size=intermediatebelief_list_size)
-   
-@login_required(login_url='/accounts/login/')
-def set_persistentnats(request,num):
-    return set_list(request,to_set=models.Userpnat,sender=models.Persistentnat,reciever='events',num=num,list_size=persistentnat_list_size)
-
-@login_required(login_url='/accounts/login/')
-def set_events(request,num):
-    return set_list(request,to_set=models.Userevent,sender=models.Eventlist,reciever='events',num=num,list_size=event_list_size)
+this view is used for showing depression assessment score of the user as per module/week.
 """
 @login_required(login_url='/accounts/login/')
 def show_depressionquiz(request):
@@ -344,6 +341,11 @@ def show_depressionquiz(request):
         return render(request,'cbt2/depression_assessment_questionnaire.html',{'module_number':module_number})
     return HttpResponseRedirect('/anxiety_quiz/')
 
+#----------------------------------------------------------------------
+"""
+this view is used for showing anxiety assessment score of the user as per module/week.
+"""
+@login_required(login_url='/accounts/login/')
 def show_anxietyquiz(request):
     module_number=request.session['module_number']
     user=request.user

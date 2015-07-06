@@ -50,7 +50,7 @@ class signupform(UserCreationForm):
 
 """
 this form is created for taking userdetails as input. I have created this form using django's ModelForm (https://docs.djangoproject.com/en/1.8/topics/forms/modelforms/)
-it has all the fields of model (line 58) except the field in the exclude set (line 59)
+it has all the fields of model specified in the Meta class model field except the field(s) in the exclude set in class Meta
 """
 class userdetails(forms.ModelForm):
     ph=forms.CharField(max_length=10, min_length=10)
@@ -66,7 +66,8 @@ class userdetails(forms.ModelForm):
 #"""
 """
 this is a form created for filing the family details of the user using django's ModelForm (https://docs.djangoproject.com/en/1.8/topics/forms/modelforms/)
-this form have all field of model (line 73)
+this form have all field of model Familymember (in class Meta field model) except the field(s) specified in exclude set and a replace ment of field phonenumber 
+is field pf to validate it's length equal to 10
 """
 class familydetails(forms.ModelForm):
     ph=forms.CharField(max_length=10, min_length=10)
@@ -74,7 +75,9 @@ class familydetails(forms.ModelForm):
         model=models.Familymembers
         exclude=['user','involvementid','phonenumber']
            
-
+"""
+this is a form used to take user's family member's involvement extent in his/her therapy it is created using django's (form https://docs.djangoproject.com/en/1.8/topics/forms/)
+it contain's only 1 field involvement also this field can have value from a possible set (CHOICES)
+"""
 class involvement(forms.Form):
-   
     involvement=forms.ChoiceField(widget=forms.RadioSelect,choices=CHOICES)

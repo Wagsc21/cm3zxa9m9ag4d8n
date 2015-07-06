@@ -1,3 +1,6 @@
+######################################################
+# all the neccessary classes and modules are imported
+######################################################
 from django.http import HttpResponseRedirect,HttpResponse, HttpRequest
 from django.contrib import auth
 from django.core.context_processors import csrf
