@@ -99,6 +99,7 @@ def challenge_nat(request):
     else:
         form=forms.Challengenatform(request.POST)
         if form.is_valid():
+            #return HttpResponse(form)
             form.save(request)
             return HttpResponse("done")
     return render(request,'challengenat/challengenatform.html',{'form':form})

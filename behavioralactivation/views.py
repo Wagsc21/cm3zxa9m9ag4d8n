@@ -16,7 +16,7 @@ from cbt2.models import *
 from exercise.models import *
 from conversationmanager.models import *
 from defaultapp.models import *
-
+from . import forms
 @login_required(login_url='/accounts/login/')
 #----------------------------------------------------------------------
 def homepage(request):
@@ -89,4 +89,28 @@ def set_list(request):
     response=HttpResponse(is_list_shown.status)
 
     return response
+@login_required(login_url='/accounts/login/')
+#----------------------------------------------------------------------
+def save_useractivity(request):
+    #return HttpResponse(request.user)
+    if request.method == 'GET':
+        form=forms.UserScheduleForm()
+    else:
+        form=forms.UserScheduleForm(request.POST)
+        #return HttpResponse(form)
+        if form.is_valid():
+            form.save(request)
+            return HttpResponse("done")
+    return render(request,'behavioralactivation/activityschedule.html',{'form':form})
     
+"""
+def challenge_nat(request):
+    if request.method == 'GET':
+        form=forms.Identifynatform()
+    else:
+        form=forms.Challengenatform(request.POST)
+        if form.is_valid():
+            form.save(request)
+            return HttpResponse("done")
+    return render(request,'challengenat/challengenatform.html',{'form':form})
+"""

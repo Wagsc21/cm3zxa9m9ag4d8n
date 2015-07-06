@@ -19,7 +19,9 @@
 		<input type="submit" name="conversationid" value="{{exercise.conversationID}}">
 		{% endfor %}
 </form>
-
+<form action="/Behavioral Activation/activityschedule/" method="post"> {% csrf_token %}
+	<input type="submit" value="user schedule">
+</form>
 
 </body>
 </html>

@@ -43,22 +43,6 @@ class Dialogs(models.Model):
         ordering=['dialog']
 
 
-"""
-# intermediate model between Users model and Conversation model
-# purpose is to store conversation history
-class Userconversation(models.Model):
-    user=models.ForeignKey(settings.AUTH_USER_MODEL)
-    dialog=models.ForeignKey(Dialogs)
-    conversationID=models.ForeignKey(Conversation)
-    option_selected=models.ForeignKey(Options)
-    conversation_time=models.DateTimeField()
-    def __str__(self):
-        return str(self.user)+" "+str(self.conversation_time)
-    class Meta:
-        ordering=['-conversation_time','user']
-
-"""
-
 # intermediate model between Conversations model and Options model
 class Conversationoptiongraph(models.Model):
     current_dialog=models.ForeignKey(Dialogs)

@@ -63,6 +63,7 @@ urlpatterns = [
     url(r'^Behavioral Activation/show_list/$','behavioralactivation.views.show_list'),
     url(r'^Behavioral Activation/set_list/$','behavioralactivation.views.set_list'),
     url(r'^Behavioral Activation/technique/(?P<technique_id>[0-9]+)/$','behavioralactivation.views.moduletechnique'),
+    url(r'^Behavioral Activation/activityschedule','behavioralactivation.views.save_useractivity'),
     url(r'^Identifying NATs/$','identifynat.views.homepage'),
     url(r'^Identifying NATs/show_list/$','identifynat.views.show_list'),
     url(r'^Identifying NATs/set_list/$','identifynat.views.set_list'),
