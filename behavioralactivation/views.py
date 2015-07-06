@@ -103,14 +103,3 @@ def save_useractivity(request):
             return HttpResponse("done")
     return render(request,'behavioralactivation/activityschedule.html',{'form':form})
     
-"""
-def challenge_nat(request):
-    if request.method == 'GET':
-        form=forms.Identifynatform()
-    else:
-        form=forms.Challengenatform(request.POST)
-        if form.is_valid():
-            form.save(request)
-            return HttpResponse("done")
-    return render(request,'challengenat/challengenatform.html',{'form':form})
-"""

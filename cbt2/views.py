@@ -53,7 +53,12 @@ def home(request):
 #----------------------------------------------------------------------
 @login_required(login_url='/accounts/login/')
 def welcome(request):
-    return render(request,'cbt2/welcome.html')
+    userdetail=models.Customuserprofile.objects.filter(user=request.user)
+    if userdetail.exists():
+        return render(request,'cbt2/welcome.html')
+    else:
+        return HttpResponseRedirect('/fill/details/')
+
 def usersignup(request):
     if request.method =='GET':
         form=forms.signupform()
@@ -67,7 +72,7 @@ def usersignup(request):
             test1=models.Test.objects.create(user=user)
             args = {}
             args.update(csrf(request))
-            return HttpResponseRedirect('/fill/details/')
+            return HttpResponseRedirect('/accounts/login/')
             
                 
             
@@ -90,7 +95,10 @@ def auth_view(request):
         request.session['username']=user.get_username()
         if user.is_superuser:
             return HttpResponseRedirect('/admin_page/')
-        return HttpResponseRedirect('/welcome/')
+        if request.POST.get('next'):
+            return HttpResponseRedirect(request.POST.get('next'))
+        else:
+            return HttpResponseRedirect('/welcome/')
     else:
         return HttpResponseRedirect('/accounts/invalid')
 
@@ -118,7 +126,7 @@ def logout(request):
 
 
 # function for recording and handelling froms.userdetails form
-@login_required(login_url='/accounts/login/')
+#@login_required(login_url='/accounts/login')
 def user_details(request):
     if request.method == 'GET':
         form=userdetails()
