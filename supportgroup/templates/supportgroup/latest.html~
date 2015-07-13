@@ -1,0 +1,9 @@
+{% if latest_query_list %}
+    <ul>
+    {% for query in latest_query_list %}
+        <li><a href="/forum/home/queries/{{query.id}}/">{{ query.title }}</a></li>
+    {% endfor %}
+    </ul>
+{% else %}
+    <p>No Queries are available.</p>
+{% endif %}

@@ -1,0 +1,14 @@
+
+
+
+<h1>Notifications</h1>
+
+{% block content %}
+
+	 
+	{% for c in notifications %}
+		<ul>
+			<li><a href="/forum/home/queries/{{c.query.id}}/">{{c.name}} commented on your post "{{c.query.title}}"</a></li>
+		</ul>
+	{% endfor %}
+{% endblock %}

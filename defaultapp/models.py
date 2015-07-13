@@ -5,7 +5,13 @@ from cbt2.models import *
 from exercise.models import *
 from conversationmanager.models import *
 from django.contrib.auth import settings
-
+"""
+this model store techniques that are to be shown in a module.
+it has 3 fields:
+technique_id:primary key to represent each technique uniquely
+module_number: to which module the technique belong
+technique_text: the name of the technique
+"""
 class Technique(models.Model):
     technique_id=models.IntegerField(primary_key=True)
     module_number=models.IntegerField()
@@ -18,7 +24,9 @@ class Technique(models.Model):
         unique_together = ("module_number","technique_text")
         
 
-
+"""
+this mode store the default conversation for any technique
+"""
 class DefaultConversation(models.Model):
     technique=models.ForeignKey(Technique)
     conversationID=models.ForeignKey(Conversation)
@@ -31,38 +39,7 @@ class DefaultConversation(models.Model):
         ordering=['technique']
 
 """
-class IntermediatebeliefConversation(models.Model):
-    technique=models.ForeignKey(Technique)
-    conversationID=models.ForeignKey(Conversation)
-    intermediatebelief=models.ForeignKey(Intermediatebelief)
-    #----------------------------------------------------------------------
-    def __str__(self):
-        return str(self.technique)
-        
-
-class CorebeliefConversation(models.Model):
-    technique=models.ForeignKey(Technique)
-    conversationID=models.ForeignKey(Conversation)
-    corebelief=models.ForeignKey(Corebelief)
-#----------------------------------------------------------------------
-    def __str__(self):
-        return str(self.technique)
-
-class PersistentnatConversation(models.Model):
-    technique=models.ForeignKey(Technique)
-    conversationID=models.ForeignKey(Conversation)
-    persistentnat=models.ForeignKey(Persistentnat)
-#----------------------------------------------------------------------
-    def __str__(self):
-        return str(self.technique)
-    
-class EventlistConversation(models.Model):
-    technique=models.ForeignKey(Technique)
-    conversationID=models.ForeignKey(Conversation)
-    eventlist=models.ForeignKey(Eventlist)
-#----------------------------------------------------------------------
-    def __str__(self):
-        return str(self.technique)    
+this model store which option outof the list in model BeliefsEventsNats has to be shown in which module
 """
 class ShowTechniqueBeliefsEventsNats(models.Model):
     technique=models.ForeignKey(Technique)
@@ -74,7 +51,10 @@ class ShowTechniqueBeliefsEventsNats(models.Model):
     class Meta:
         unique_together=("technique","beliefseventsnats")
         
-
+"""
+this model store which conversation should be shown to a user in which module if he selects a perticular item from the list.
+this technique stores relation betwwen BeliefsEventsNats, Technique, Conversation
+"""
 class ConversationTechniqueBeliefsEventsNats(models.Model):
     technique=models.ForeignKey(Technique)
     beliefseventsnats=models.ForeignKey(BeliefsEventsNats)
@@ -89,7 +69,9 @@ class ConversationTechniqueBeliefsEventsNats(models.Model):
         
         
 
-
+"""
+once it is determined what options are selected by user we add the corrosponding conversation for the technique to which it belong for the user
+"""
 class UserConversationTechnique(models.Model):
     user=models.ForeignKey(settings.AUTH_USER_MODEL)
     technique=models.ForeignKey(Technique)
@@ -102,7 +84,9 @@ class UserConversationTechnique(models.Model):
         unique_together=("user","technique","conversation")
         
         
-    
+"""
+this model stores that for a technique if list of options is shown or not if yes we set status= True
+"""
 class ShownListToUser(models.Model):
     user=models.ForeignKey(settings.AUTH_USER_MODEL)
     technique=models.ForeignKey(Technique)

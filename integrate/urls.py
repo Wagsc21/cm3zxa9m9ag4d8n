@@ -20,7 +20,7 @@ from django.views.generic import TemplateView
 urlpatterns = [
 
     url(r'^admin/', include(admin.site.urls)),
-
+    #url(r'^accounts/',include('cbt2.urls',namespace='cbt2')),
     url(r'^home/','cbt2.views.home'),
     url(r'^welcome/','cbt2.views.welcome'),
     url(r'^fill/details/$','cbt2.views.user_details'),
@@ -82,6 +82,7 @@ urlpatterns = [
     url(r'^Relapse Prevention/$','relapseprevention.views.homepage'),
     url(r'^Relapse Prevention/show_list/$','relapseprevention.views.show_list'),
     url(r'^Relapse Prevention/set_list/$','relapseprevention.views.set_list'),
-    url(r'^Relapse Prevention/technique/(?P<technique_id>[0-9]+)/$','relapseprevention.views.moduletechnique'),    
+    url(r'^Relapse Prevention/technique/(?P<technique_id>[0-9]+)/$','relapseprevention.views.moduletechnique'),
+    url(r'^forum/',include('supportgroup.urls',namespace="supportgroup")),
 
 ]

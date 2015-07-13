@@ -48,6 +48,7 @@ INSTALLED_APPS = (
     'challengenat',
     'modifybelief',
     'relapseprevention',
+    'supportgroup',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -62,7 +63,6 @@ MIDDLEWARE_CLASSES = (
 )
 
 ROOT_URLCONF = 'integrate.urls'
-
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',

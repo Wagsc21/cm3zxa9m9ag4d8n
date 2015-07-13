@@ -21,6 +21,14 @@
         {
           var cell = document.createElement("td");
           var input = document.createElement("input");
+          if (j==1)
+          {
+            var check=document.createElement("input");
+            check.setAttribute("name","is_correct["+len+"]")
+            check.setAttribute("type","checkbox");
+            check.setAttribute("class","check1");
+            cell.appendChild(check);
+          }
           input.setAttribute("type", "text");
           input.setAttribute("name", "row["+(len+1)+"]["+j+"]");
           input.setAttribute("size","50");
@@ -62,7 +70,7 @@
                     		<td>Row{{forloop.counter}}</td>
                     		<td><input type="text" name="row[{{forloop.counter}}][0]") value="{{row.current_dialog.dialog_text}}" size="50">
                     		</td>
-                    		<td><input type="text" name="row[{{forloop.counter}}][1]") value="{{row.option.option_text}}" size="50">
+                    		<td><input type="checkbox" name="is_correct[{{forloop.counter}}]" {% if row.wrong_option %}checked{% endif %}><input type="text" name="row[{{forloop.counter}}][1]") value="{{row.option.option_text}}" size="50">
                     		</td>
                     		<td><input type="text" name="row[{{forloop.counter}}][2]") value="{{row.next_dialog.dialog_text}}" size="50">
                     		</td>

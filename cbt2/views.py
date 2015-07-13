@@ -15,6 +15,7 @@ from datetime import datetime
 from . import models , forms
 from django.contrib.auth.decorators import login_required
 from django.conf import settings
+from .authentication import *
 """
 depression assessment quiz question list
 NOT USED ANYWHERE YET
@@ -68,6 +69,7 @@ def welcome(request):
         return render(request,'cbt2/welcome.html')
     else:
         return HttpResponseRedirect('/fill/details/')
+
 #----------------------------------------------------------------------
 """
 this is view that is used for user sign up purpose it uses signupform ('cbt2/forms.py').
@@ -123,7 +125,10 @@ def auth_view(request):
     else:
         return HttpResponseRedirect('/accounts/invalid')
 
+
+    
 #----------------------------------------------------------------------
+
 """
 this is a view to redirect the user to once he is logged in
 """
@@ -145,12 +150,9 @@ def invalid_login(request):
 this view logs out the user also delete the cache history so that user can't log back in just by pressing back button in browser
 """
 @cache_control(no_cache=True, must_revalidate=True)
-# function that log out user
 def logout(request):
-    auth.logout(request)
-    response=redirect('cbt2.views.login')
-    
-    return response
+    auth.logout(request)    
+    return HttpResponseRedirect('/accounts/login/')
 
 
 #----------------------------------------------------------------------

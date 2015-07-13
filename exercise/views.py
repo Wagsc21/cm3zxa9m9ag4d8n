@@ -1,4 +1,7 @@
 
+######################################################
+# all the related modules and classes are imported 
+######################################################
 from django.http import HttpResponseRedirect,HttpResponse
 from django.contrib import auth
 from django.core.context_processors import csrf
@@ -19,7 +22,11 @@ from django.db.models import Q , Max
 def show_exercise_list(request):
     exercise_list=models.ExerciseConversation.objects.filter(conversation_type='Base')
     return render(request,'exercise/exercise_page.html',{'exercise_list':exercise_list})
-
+"""
+this view is used to render the exercise page to user 
+this read the value of conversationid and module_number from the post request and get the corrosponding exercise conversation.
+to do so it uses ExerciseConversation model
+"""
 @login_required(login_url='/accounts/login/')
 def show_exercise(request):
     conversationID=request.POST.get('conversationid')
@@ -30,6 +37,12 @@ def show_exercise(request):
     return render(request,'exercise/exercise_conversation.html',{'conversation':conversation,'module_number':module_number})
 
 #----------------------------------------------------------------------
+"""
+the conversation view is used to read the input technique from the post request and check  if it exists or not.
+if the given technique doesn't exist an error message is shown.
+if the technique is correct then correct message is shown and the conversation for that technique is shown.
+if the technique is not correct then not correct message and shown and the technique conversation is shown.
+"""
 @login_required(login_url='/accounts/login/')
 def conversation(request):
     conversation=models.ExerciseConversation.objects.get(conversationID=request.POST.get('conversationid'),conversation_type="Base")
@@ -54,11 +67,17 @@ def conversation(request):
 
 @user_passes_test(lambda u: u.is_superuser)
 #----------------------------------------------------------------------
+"""
+this view is for admin purpose to render the add exercise page
+"""
 def exercise(request):
     return render(request,"exercise/addexercise.html")
     
 @user_passes_test(lambda u: u.is_superuser)
 #----------------------------------------------------------------------
+"""
+this view is involked when admin add a new exercise to the database
+"""
 def add_exercise(request):
     base_conversation=request.POST.get('base_conversation',None)
     last_conversation=models.ExerciseConversation.objects.all().aggregate(Max('conversationID'))['conversationID__max']
@@ -88,42 +107,3 @@ def add_exercise(request):
     else:
         return HttpResponse("not done")
 
-"""
-@login_required(login_url='/accounts/login/')
-#----------------------------------------------------------------------
-def identify_nat(request):
-    if request.method == 'GET':
-        form=forms.Identifynatform()
-    else:
-        form=forms.Identifynatform(request.POST)
-        if form.is_valid():
-            form.save(request)
-            return HttpResponse("done")
-    return render(request,'exercise/identifynatform.html',{'form':form})
-        
-@login_required(login_url='/accounts/login/')
-#----------------------------------------------------------------------
-def challenge_nat(request):
-    if request.method == 'GET':
-        form=forms.Challengenatform()
-    else:
-        form=forms.Challengenatform(request.POST)
-        if form.is_valid():
-            form.save(request)
-            return HttpResponse('done')
-    return render(request,'exercise/challengenatform.html',{'form':form})
-
-@login_required(login_url='/accounts/login/')
-#----------------------------------------------------------------------
-@login_required(login_url='/accounts/login/')
-def modifybeliefs(request):
-    if request.method == 'GET':
-        form=forms.Modifyingbeliefform()
-    else:
-        form=forms.Modifyingbeliefform(request.POST)
-        if form.is_valid():
-            form.save(request)
-            return HttpResponse('done')
-    return render(request,'exercise/modifybeliefsform.html',{'form':form})
-    
-"""

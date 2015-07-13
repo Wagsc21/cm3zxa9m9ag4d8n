@@ -1,4 +1,6 @@
-
+######################################################
+# all neccessary modules and classes are imported
+#######################################################
 from django.http import HttpResponseRedirect,HttpResponse
 from django.contrib import auth
 from django.core.context_processors import csrf
@@ -16,10 +18,15 @@ from django.contrib.auth.models import User
 from . import models
 from django.contrib.auth.decorators import user_passes_test
 from django.db.models import Q , Max
-# Create your views here.
-
-
- # function for carrying out the conversation with conversation id as only input
+"""
+this view is used to carry out the conversation (or simply traversing the Conversationoptiongraph model )
+this view reads a dialog form the post method if it is none den it assumes it is a start of the conversation.
+in that case it look for a conversationID in the post data of the request
+if the conversationID is found is fatches the first dialog for it and from the Conversationoptiongraph it fatches options for that dialog.
+after that it renders the data to the conversation page.
+that page makes ajax request and from that on this view read the dialog and selected option and find out the next_dialog
+once next dialog is found it again fatches options for that and render to the same page untill the no option is found for the dialog
+"""
 @login_required(login_url='/accounts/login/')
 def carry_out_conversation(request):
     user=request.user
@@ -58,19 +65,26 @@ def carry_out_conversation(request):
             return HttpResponseRedirect('/welcome/')
 
     
-#def conversation_page(request):
-    #conversations=models.Conversation.objects.all()
-    #return render(request,'conversationmanager/conversation_page.html',{'conversations': conversations})
+"""
+this page has to be used only by admin it is used for adding new conversation this renders a page which shows.
+it renders a page to add dialogs and options for the conversation
+"""
 
-
-@user_passes_test(lambda u: u.is_superuser)
 #----------------------------------------------------------------------
+@user_passes_test(lambda u: u.is_superuser)
 def conversation(request):
     last_conversation=models.Conversation.objects.all().aggregate(Max('conversationID'))['conversationID__max']
     return render(request,"conversationmanager/myui.html",{'lastconversation': last_conversation})
 
-@user_passes_test(lambda u: u.is_superuser)
+"""
+this view handles the addition of new conversations.
+it first create object of the dialogs
+then for every option it search for an existing one and if one exists it uses that otherwise it creates one.
+then it creates the graph for the dialog and options (current_dialog<-->option<-->next_dialog)
+"""
+
 #----------------------------------------------------------------------
+@user_passes_test(lambda u: u.is_superuser)
 def add_conversation(request):
     if request.POST.get('conversationid') ==None:
         return HttpResponseRedirect("/admin_page/")
@@ -100,21 +114,39 @@ def add_conversation(request):
             option=models.Options.objects.get(Q(option_text=request.POST.get('row[%d][1]' %i)))
         except models.Options.DoesNotExist:
             option=models.Options.objects.create(optionID=last_option_ID+1 ,option_text=request.POST.get('row[%d][1]' %i))
-        models.Conversationoptiongraph.objects.get_or_create(current_dialog=current_dialog,option=option,next_dialog=next_dialog)
+        wrong_option=False
+        if not request.POST.get('is_correct[%d]'%i,None) == None:
+            wrong_option=True
+        models.Conversationoptiongraph.objects.get_or_create(current_dialog=current_dialog,option=option,next_dialog=next_dialog,wrogn_option=wrong_option)
         i=i+1
     return render(request,"conversationmanager/goback.html",{'message':'%s added' % request.POST.get('conversationid')})
 
-@user_passes_test(lambda u: u.is_superuser)
+"""
+this view renders the admin page
+"""
+
 #----------------------------------------------------------------------
+@user_passes_test(lambda u: u.is_superuser)
 def admin(request):
     return render(request,'conversationmanager/admin_page.html')
 
-@user_passes_test(lambda u: u.is_superuser)
+"""
+this view renders the update page 
+"""
 #----------------------------------------------------------------------
+@user_passes_test(lambda u: u.is_superuser)
+
 def update_conversation(request):
     return render(request,'conversationmanager/editui.html')
-@user_passes_test(lambda u: u.is_superuser)
+
+"""
+this view render the row of an existing conversationID send in post request in case
+if the given conversationID doesn't exist it shows a error message and it the conversationID exist in the database
+it returns all the rows of the conversationID as a graph (current_dialog<-->option<-->next_dialog)
+"""
+
 #----------------------------------------------------------------------
+@user_passes_test(lambda u: u.is_superuser)
 def edit_conversation(request):
     conversation=models.Conversation.objects.filter(Q(conversationID=int(request.POST.get('conversationid'))))
     if not conversation.exists():
@@ -123,8 +155,14 @@ def edit_conversation(request):
     rows=models.Conversationoptiongraph.objects.filter(current_dialog__in=dialogs).order_by("current_dialog")
     return render(request,'conversationmanager/editpage.html',{'rows':rows,'conversationid':request.POST.get('conversationid')})
    
-@user_passes_test(lambda u: u.is_superuser)
+
+"""
+this view apply the updates of edit done in the conversation
+for applying update it first delete all the previous dialogs and new ones
+"""
+
 #----------------------------------------------------------------------
+@user_passes_test(lambda u: u.is_superuser)
 def apply_update(request):
     i=1
     conversationid=models.Conversation.objects.get(conversationID=int(request.POST.get('conversationid')))
@@ -151,13 +189,20 @@ def apply_update(request):
             option=models.Options.objects.get(Q(option_text=request.POST.get('row[%d][1]' %i)))
         except models.Options.DoesNotExist:
             option=models.Options.objects.create(optionID=last_option_ID+1 ,option_text=request.POST.get('row[%d][1]' %i))
-        models.Conversationoptiongraph.objects.get_or_create(current_dialog=current_dialog,option=option,next_dialog=next_dialog)
+        wrong_option=False
+        if not request.POST.get('is_correct[%d]'%i,None) == None:
+            wrong_option=True        
+        models.Conversationoptiongraph.objects.get_or_create(current_dialog=current_dialog,option=option,next_dialog=next_dialog,wrong_option=wrong_option)
         i=i+1
     #conversations=models.Dialogs.objects.filter(conversationID=conversationid).delete()
     
     return edit_conversation(request)
-   
+
+"""
+this view  at the end of a conversation it saves the history string for the user
+"""
 #----------------------------------------------------------------------
+@login_required(login_url='/accounts/login/')
 def history(request):
     user=request.user
     conversationID=models.Conversation.objects.get(conversationID=int(request.POST.get('conversationID')))
@@ -172,7 +217,12 @@ def history(request):
         history=models.ConversationHistory.objects.create(user=user,conversationID=conversationID,history=request.POST.get('history'))
         return HttpResponse('history created')
 
+"""
+this view is used for showing the list of the conversations which are carried out atlest one and are in user's history.
+also when a conversationID is selected it shows the user history for the conversation
+"""  
 #----------------------------------------------------------------------
+@login_required(login_url='/accounts/login/')
 def show_history(request):
     user=request.user
     if request.POST.get('conversationID',None) == None:

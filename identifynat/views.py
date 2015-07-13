@@ -17,7 +17,11 @@ from exercise.models import *
 from conversationmanager.models import *
 from defaultapp.models import *
 from . import forms
-
+"""
+this view will return the home page of the 3rd module.
+it renders the technique with module_number=3 from the model defaultapp.model
+also it renders the exercise list for the same module number
+"""
 @login_required(login_url='/accounts/login/')
 #----------------------------------------------------------------------
 def homepage(request):
@@ -27,6 +31,13 @@ def homepage(request):
     data={'technique_list':technique_list,'module_number':module_number,'exercise_list':exercise_list }
     return render(request,'identifynat/module_main_page.html',data)
 
+"""
+this page will be rendered when a perticular technique is selected in the module.
+it will render all the default conversations (defaultapp.DefaultConversation)
+and specific cconversation based on the options from the list (cbt2.BeliefsEventsNats) 
+the exercises for this module is rendered.
+and lastly user's conversation history (if any) is renderd in a set data
+"""
 @login_required(login_url='/accounts/login/')
 #----------------------------------------------------------------------
 def moduletechnique(request,technique_id):
@@ -54,6 +65,10 @@ def moduletechnique(request,technique_id):
         except KeyError:
             return HttpResponseRedirect('/welcome/')
 
+"""
+this view takes the technique from the post method and for that if there are any beliefs or persistent nats or events to show 
+it renders a page of list of all those options if the list is not shown once
+"""
 @login_required(login_url='/accounts/login/')
 #----------------------------------------------------------------------
 def show_list(request):
@@ -70,6 +85,10 @@ def show_list(request):
         return HttpResponseRedirect('/Identifying NATs/technique/'+str(technique.technique_id)+'/')
     return render(request,'identifynat/show_list.html',{'list_to_show':list_to_show ,'technique':technique})
 
+"""
+this view handle the elements selected and find the conversations  that are to be shown with in any module and add it to 
+UserConversationTechnique to show that conversation specifially to that user in the defined technique
+"""
 @login_required(login_url='/accounts/login/')
 #----------------------------------------------------------------------
 def set_list(request):
@@ -91,6 +110,9 @@ def set_list(request):
 
     return response
     
+"""
+this will render and handle the form needed for exercise in identify NAT module
+"""
 @login_required(login_url='/accounts/login/')
 #----------------------------------------------------------------------
 def identify_nat(request):

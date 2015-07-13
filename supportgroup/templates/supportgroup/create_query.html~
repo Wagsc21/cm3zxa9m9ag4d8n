@@ -1,0 +1,18 @@
+{% block sidebar %}
+<ul>
+	<li><a href="/forum/home/queries/all">Cancel</a></li>
+</ul>
+{% endblock %}
+
+{% block content %}
+
+<form action="/forum/home/create/" method="post" >{% csrf_token %}
+<!-- write enctype="multipart/form-data" within form to add thumbnail -->
+<ul>
+	{{form.as_ul}}
+</ul>
+
+<input type="submit" name="submit" value="Create Query">
+</form>
+
+{% endblock %}

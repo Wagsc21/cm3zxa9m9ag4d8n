@@ -1,0 +1,34 @@
+
+
+<h1>Queries</h1>
+
+{% block sidebar %}
+
+<ul>
+	<li><a href="/forum/home/create/"> Create Query </a></li>
+	<li><a href="/forum/home/notifications/">Notifications</a></li>
+	<li><a href="/forum/home/latest/">Latest Queries</a></li>
+</ul>
+
+<h3>Search</h3>
+{% csrf_token %}
+<input type="text" id="search" name="search" />
+
+<ul id="search-results">
+
+</ul>
+
+{% endblock %}
+
+
+{% block content %}
+
+	 
+	{% for query in queries %}
+		<div>
+		<h2><a href="/forum/home/queries/{{query.id}}/">{{query.title}}</a></h2>
+		<p>{{query.upvotes}} upvotes</p>
+		<p>{{query.downvotes}} downvotes</p>
+
+	{% endfor %}
+{% endblock %}

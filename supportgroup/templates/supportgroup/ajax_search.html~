@@ -1,0 +1,10 @@
+{% if queries.count > 0 %}
+
+	{% for query in queries %}
+		<li><a href="forum/home/queries/{{query.id}}/">{{query.title}}</a></li>
+	{% endfor %}
+
+{% else %}
+	<li>None to show!</li>
+
+{% endif %} 

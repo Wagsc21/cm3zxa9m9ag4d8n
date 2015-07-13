@@ -1,5 +1,7 @@
 
-
+"""
+THIS FILE IS NOT USED ANY MORE BECAUSE ALL THIS CODE IS SHIFTED TO EACH MODULE APP
+"""
 from django.http import HttpResponseRedirect,HttpResponse, HttpRequest
 from django.contrib import auth
 from django.core.context_processors import csrf

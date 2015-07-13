@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block sidebar %}
+<ul>
+	<li><a href="/forum/home/queries/all">All queries</a></li>
+</ul>
+{% endblock %}
+
+{% block content %}
+
+	<h1>{{query.title}}</h1>
+	<h3>{{query.details}}</h3>
+	<!--{% if query.thumbnail %}
+		<p><img src="/static/assets/{{query.thumbnail}}" width="200" /></p>
+	{% endif %} -->
+	<p>{{query.upvotes}} upvotes</p>
+	<p>{{query.downvotes}} downvotes</p>
+	<p><a href="/forum/home/queries/upvote/{{query.id}}">Upvote</a></p>
+	<p><a href="/forum/home/queries/downvote/{{query.id}}">Downvote</a></p>
+	
+	<h2>Comments</h2>
+	{% for c in query.comment_set.all %}
+		<p>{{c.name}} : {{c.body}}</p>
+		<p>{{c.upvotes}} upvotes</p>
+		<p>{{c.downvotes}} downvotes</p>
+		<p><a href="/forum/home/queries/upvotes/{{query.id}}/{{comment.id}}/">Upvote</a></p>
+		<p><a href="/forum/home/queries/downvotes/{{query.id}}/{{comment.id}}/">Downvote</a></p>
+	{% endfor %}
+
+	<p><a href="/forum/home/queries/add_comment/{{query.id}}">Comment</a></p>	
+
+{% endblock %}

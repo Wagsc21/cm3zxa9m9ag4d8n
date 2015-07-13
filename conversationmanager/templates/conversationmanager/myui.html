@@ -21,6 +21,16 @@
         {
           var cell = document.createElement("td");
           var input = document.createElement("input");
+          
+          
+          if (j==1)
+          {
+            var check=document.createElement("input");
+            check.setAttribute("name","is_correct["+len+"]")
+            check.setAttribute("type","checkbox");
+            check.setAttribute("class","check1");
+            cell.appendChild(check);
+          }
           input.setAttribute("type", "text");
           input.setAttribute("name", "row["+len+"]["+j+"]");
           input.setAttribute("required","true");

@@ -1,9 +1,11 @@
 from django.db import models
-
-# Create your models here.
 from django.contrib import admin
 from django.contrib.auth import settings
 
+"""
+this model has a single field. this model is used everywhere as a foreign key to associate dialogs to a 
+perticular conversation
+"""
 class Conversation(models.Model):
     conversationID=models.IntegerField(primary_key=True)
         
@@ -15,7 +17,9 @@ class Conversation(models.Model):
         
 
 
-# model for options for a dialog 
+"""
+this model is used to store the options.
+"""
 class Options(models.Model):
     optionID=models.IntegerField(primary_key=True)
     option_text=models.CharField(max_length=255,unique=True)
@@ -26,7 +30,11 @@ class Options(models.Model):
 
 
     
-# model for conversation
+"""
+this model stores the dialog which will be used by the automated system for conversation
+it has a foreignkey field to link the dialogs with a conversation.
+dialogs with same conversationID field are part of same conversation
+"""
 class Dialogs(models.Model):
     conversationID=models.ForeignKey(Conversation)
     dialog=models.IntegerField('dialog ID',primary_key=True)
@@ -43,19 +51,25 @@ class Dialogs(models.Model):
         ordering=['dialog']
 
 
-# intermediate model between Conversations model and Options model
+"""
+this model store the graph between the dialogs as a triplet (current_dialog-option-next_dialog)
+to carry out a conversation we match for current_dialog and option and determine system's next dialog
+"""
 class Conversationoptiongraph(models.Model):
     current_dialog=models.ForeignKey(Dialogs)
     option=models.ForeignKey(Options)
     next_dialog=models.ForeignKey(Dialogs,related_name='next_conversation',null=True,blank=True)
-    
+    wrong_option=models.BooleanField(default=False)
     def __str__(self):
         return str(self.current_dialog.dialog)+"-"+str(self. option.optionID)+"-"+str(self.next_dialog.dialog)
     class meta:
         ordering=['current_conversation']
         
-
-
+"""
+this model store history for every user.
+only latest history is stored for any conversation.
+the history is stored as a single string
+"""
 class ConversationHistory(models.Model):
     user=models.ForeignKey(settings.AUTH_USER_MODEL)
     conversationID=models.ForeignKey(Conversation)

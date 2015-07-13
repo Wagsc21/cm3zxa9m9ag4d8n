@@ -1,5 +1,10 @@
 from .models import *
 from django.forms import ModelForm
+"""
+this form a ModelForm used for the exercise of moudle modify belief.
+it uses model ModifyingBelief to show fields except the user field.
+
+"""
 class Modifyingbeliefform(ModelForm):
     class Meta:
         model=ModifyingBelief

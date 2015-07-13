@@ -1,0 +1,8 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+	<li><p><a href="/forum/home/create">Create Query</a></p>
+	<li><p><a href="/forum/home/queries/all">All queries</a></p>
+
+{% endblock %}

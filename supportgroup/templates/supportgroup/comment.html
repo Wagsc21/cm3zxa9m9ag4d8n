@@ -1,0 +1,21 @@
+
+
+
+{% block sidebar %}
+<ul>
+	<li><a href="/forum/home/queries/all">Cancel</a></li>
+</ul>
+{% endblock %}
+
+{% block content %}
+
+<form action="/forum/home/queries/add_comment/{{query.id}}/" method="post" >{% csrf_token %}
+
+<ul>
+	{{form.as_ul}}
+</ul>
+
+<input type="submit" name="submit" value="Create Comment">
+</form>
+
+{% endblock %}

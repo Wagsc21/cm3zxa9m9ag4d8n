@@ -1,6 +1,8 @@
 from django.db import models
 from django .contrib.auth import settings
-# Create your models here.
+"""
+this model is used for storing the data that is filled in the modify belief module exercise
+"""
 class ModifyingBelief(models.Model):
     user=models.ForeignKey(settings.AUTH_USER_MODEL)
     description=models.TextField()
