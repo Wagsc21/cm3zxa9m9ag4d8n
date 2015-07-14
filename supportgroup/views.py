@@ -4,7 +4,7 @@ from .forms import QueryForm,CommentForm,NotificationForm
 from django.http import HttpResponseRedirect
 from django.core.context_processors import csrf
 from .models import *
-
+from django.contrib.auth.decorators import login_required
 # Create your views here.
 @login_required(login_url='/accounts/login')
 def home(request):
