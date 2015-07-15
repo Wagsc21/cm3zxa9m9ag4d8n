@@ -22,20 +22,26 @@ def queries(request):
 
 @login_required(login_url='/accounts/login')
 def query(request, query_id = 1):
-	return render(request, 'supportgroup/query.html',{'query' : Query.objects.get(id=query_id)})
+	return render(request, 'supportgroup/query.html',{'query' : get_object_or_404(Query,id=query_id)})
 
 
 @login_required(login_url='/accounts/login')
 def upvote(request,query_id, comment_id=0):
-	if(comment_id==0):	
+	if comment_id==0:
 		p=get_object_or_404(Query,pk=query_id)
-		p.upvotes +=1
-		p.save()
+		voted=QueryUpvoteOrDownvote.objects.filter(user=request.user,query=p)
+		if not voted.exists():
+			p.upvotes +=1
+			p.save()
+			QueryUpvoteOrDownvote.objects.create(user=request.user,query=p,vote=1)
 		return HttpResponseRedirect('/forum/home/queries/%s' % query_id)
 	elif(int(comment_id)>0):
 		p=get_object_or_404(Comment,pk=comment_id)
-		p.upvotes +=1
-		p.save()
+		voted=CommentUpvoteOrDownvote.objects.filter(user=request.user,comment=p)
+		if not voted.exists():
+			p.upvotes +=1
+			p.save()
+			CommentUpvoteOrDownvote.objects.create(user=request.user,comment=p,vote=1)
 		return HttpResponseRedirect('/forum/home/queries/%s' % query_id)
 
 
@@ -43,13 +49,19 @@ def upvote(request,query_id, comment_id=0):
 def downvote(request,query_id,comment_id=0):
 	if(comment_id==0):	
 		p=get_object_or_404(Query,pk=query_id)
-		p.downvotes +=1
-		p.save()
+		voted=QueryUpvoteOrDownvote.objects.filter(user=request.user,query=p)
+		if not voted.exists():		
+			p.downvotes +=1
+			p.save()
+			QueryUpvoteOrDownvote.objects.create(user=request.user,query=p,vote=0)
 		return HttpResponseRedirect('/forum/home/queries/%s' % query_id)
 	elif(int(comment_id)>0):
 		p=get_object_or_404(Comment,pk=comment_id)
-		p.downvotes +=1
-		p.save()
+		voted=CommentUpvoteOrDownvote.objects.filter(user=request.user,comment=p)
+		if not voted.exists():		
+			p.downvotes +=1
+			p.save()
+			CommentUpvoteOrDownvote.objects.create(user=request.user,comment=p,vote=0)
 		return HttpResponseRedirect('/forum/home/queries/%s' % query_id)
 
 
@@ -109,17 +121,7 @@ def latest(request):
 	context = {'latest_query_list': latest_query_list,}
 	return render(request,'supportgroup/latest.html',context)
 
-"""
-def search_titles(request):
-	if request.method=="POST":
-		search_text = request.POST['search_text']
-	else:
-		search_text = ''
 
-	queries = Query.objects.filter(title__contains=search_text)
-
-	return render(request,'ajax_search.html',{'queries':queries})
-"""
 
 
 

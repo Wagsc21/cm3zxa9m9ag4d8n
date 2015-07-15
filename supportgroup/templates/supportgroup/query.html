@@ -21,7 +21,7 @@
 	
 	<h2>Comments</h2>
 	{% for c in query.comment_set.all %}
-		<p>{{c.name}} : {{c.body}}</p>
+		<p>{{c.user.username}} : {{c.body}}</p>
 		<p>{{c.upvotes}} upvotes</p>
 		<p>{{c.downvotes}} downvotes</p>
 		<p><a href="/forum/home/queries/upvotes/{{query.id}}/{{c.id}}/">Upvote</a></p>

@@ -10,6 +10,7 @@ class Query(models.Model):
 	upvotes = models.IntegerField(default=0)
 	downvotes = models.IntegerField(default=0)
 	#thumbnail = models.FileField(upload_to=get_upload_file_name)
+	
 	def __str__(self):
 		return self.title
 
@@ -27,3 +28,13 @@ class Notification(models.Model):
 	user=models.ForeignKey(settings.AUTH_USER_MODEL)	
 	name = models.TextField()
 	query = models.ForeignKey(Query) 
+
+class QueryUpvoteOrDownvote(models.Model):
+	user=models.ForeignKey(settings.AUTH_USER_MODEL)
+	query=models.ForeignKey(Query)
+	vote=models.BooleanField()                               # = 0 for downvote and = 1 for upvote
+
+class CommentUpvoteOrDownvote(models.Model):
+	user=models.ForeignKey(settings.AUTH_USER_MODEL)
+	comment=models.ForeignKey(Comment)
+	vote=models.BooleanField()				# = 0 for downvote and = 1 for upvote
